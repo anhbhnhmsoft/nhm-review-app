@@ -10,7 +10,12 @@ class Ward extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'code', 'english_name', 'administrative_level', 'decree', 'province_code'
+        'name',
+        'code',
+        'english_name',
+        'administrative_level',
+        'decree',
+        'province_code',
     ];
 
     // Mối quan hệ với bảng Province (Mỗi phường xã thuộc một tỉnh thành)

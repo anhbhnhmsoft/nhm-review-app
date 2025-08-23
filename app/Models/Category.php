@@ -5,19 +5,29 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'id',
         'name',
+        'name_home_page',
+        'show_header_home_page',
+        'show_index_home_page',
         'slug',
         'logo',
         'parent_id',
         'description',
-        'status'
+        'status',
+    ];
+
+    protected $casts = [
+        'show_header_home_page' => 'boolean',
+        'show_index_home_page' => 'boolean',
     ];
 
     protected static function booted()

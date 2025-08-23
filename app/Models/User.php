@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -11,6 +12,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,13 +23,13 @@ class User extends Authenticatable
         'id',
         'name',
         'email',
-        'password',
+        'avatar_path',
         'phone',
         'address',
         'introduce',
         'role',
-        'avatar_path',
-        'email_verified_at'
+        'email_verified_at',
+        'password',
     ];
 
     /**

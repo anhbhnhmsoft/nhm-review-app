@@ -10,7 +10,11 @@ class Province extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'code', 'english_name', 'administrative_level', 'decree'
+        'name',
+        'code',
+        'english_name',
+        'administrative_level',
+        'decree',
     ];
 
     public function wards()

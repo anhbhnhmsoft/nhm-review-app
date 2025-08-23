@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
 
     protected $fillable = [
         'id',
@@ -18,11 +21,17 @@ class Article extends Model
         'content',
         'author',
         'image_path',
-        'view_count',
+        'view',
+        'sort',
+        'type',
         'seo_title',
         'seo_description',
         'seo_keywords',
         'status',
+    ];
+
+    protected $casts = [
+        'view' => 'integer',
     ];
 
     protected static function booted()
@@ -32,11 +41,5 @@ class Article extends Model
                 $model->id = HelperFunction::getTimestampAsId();
             }
         });
-    }
-
-    // Mối quan hệ với bảng ArticleCategory (Một bài viết thuộc một danh mục)
-    public function category()
-    {
-        return $this->belongsTo(ArticleCategory::class);
     }
 }

@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Review extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
 
     protected $fillable = [
         'id',
@@ -47,7 +50,7 @@ class Review extends Model
     }
 
     // Mối quan hệ với bảng ReviewImage (Một đánh giá có nhiều hình ảnh)
-    public function images()
+    public function reviewImages()
     {
         return $this->hasMany(ReviewImage::class);
     }

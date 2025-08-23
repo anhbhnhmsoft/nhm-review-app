@@ -5,18 +5,46 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Store extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
 
     protected $fillable = [
         'id',
-        'name', 'slug', 'category_id', 'province_id', 'ward_id', 'address',
-        'latitude', 'longitude', 'google_map_place_id', 'logo_path', 'short_description',
-        'description', 'phone', 'email', 'website', 'facebook_page', 'instagram_page',
-        'tiktok_page', 'youtube_channel', 'opening_time', 'closing_time', 'status',
-        'featured', 'sorting_order'
+        'name',
+        'slug',
+        'category_id',
+        'province_code',
+        'ward_code',
+        'address',
+        'latitude',
+        'longitude',
+        'google_map_place_id',
+        'logo_path',
+        'short_description',
+        'description',
+        'phone',
+        'email',
+        'website',
+        'facebook_page',
+        'instagram_page',
+        'tiktok_page',
+        'youtube_page',
+        'opening_time',
+        'closing_time',
+        'status',
+        'view',
+        'featured',
+        'sorting_order',
+    ];
+
+    protected $casts = [
+        'view' => 'integer',
+        'featured' => 'boolean',
     ];
 
     protected static function booted()
@@ -47,9 +75,14 @@ class Store extends Model
     }
 
     // Mối quan hệ với bảng StoreFiles (Một cửa hàng có nhiều tệp đính kèm)
-    public function files()
+    public function storeFiles()
     {
         return $this->hasMany(StoreFile::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 
     // Mối quan hệ với bảng Reviews (Một cửa hàng có nhiều đánh giá)

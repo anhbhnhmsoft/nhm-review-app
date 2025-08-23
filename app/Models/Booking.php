@@ -5,19 +5,23 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ArticleCategory extends Model
+class Booking extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
 
     protected $fillable = [
         'id',
-        'name',
-        'slug',
-        'description',
-        'image_path',
-        'status'
+        'store_id',
+        'customer_name',
+        'customer_phone',
+        'customer_email',
+        'note',
     ];
+
 
     protected static function booted()
     {
@@ -28,9 +32,10 @@ class ArticleCategory extends Model
         });
     }
 
-    // Mối quan hệ với bảng Articles (Một danh mục có nhiều bài viết)
-    public function articles()
+
+    public function store()
     {
-        return $this->hasMany(Article::class);
+        return $this->belongsTo(Store::class);
     }
+
 }

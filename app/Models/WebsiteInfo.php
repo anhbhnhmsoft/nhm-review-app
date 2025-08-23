@@ -5,22 +5,20 @@ namespace App\Models;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StoreFile extends Model
+class WebsiteInfo extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-
 
     protected $fillable = [
         'id',
-        'store_id',
-        'file_path',
-        'file_name',
-        'file_extension',
-        'file_size',
-        'file_type',
+        'slug',
+        'title',
+        'content',
+        'image_path',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
     ];
 
     protected static function booted()
@@ -32,10 +30,4 @@ class StoreFile extends Model
         });
     }
 
-
-    // Mối quan hệ với bảng Store (Một tệp thuộc một cửa hàng)
-    public function store()
-    {
-        return $this->belongsTo(Store::class);
-    }
 }

@@ -11,6 +11,37 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('avatar_path')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->text('introduce')->nullable();
+            $table->tinyInteger('role');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+
         // Tạo bảng provinces để lưu trữ thông tin về các tỉnh thành
         Schema::create('provinces', function (Blueprint $table) {;
             $table->id();
@@ -44,8 +75,11 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->comment('Bảng categories lưu trữ các danh mục của cửa hàng');
-            $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('name')->comment('Tên danh mục');
+            $table->string('name_home_page')->nullable()->comment('Tên danh mục, dùng để hiển thị trên trang chủ');
+            $table->boolean('show_header_home_page')->default(false)->comment('Cho phép hiển thị danh mục trên header trang chủ hay không');
+            $table->boolean('show_index_home_page')->default(false)->comment('Cho phép hiển thị danh mục trên trang chủ hay không');
+            $table->string('slug')->unique()->comment('Slug của danh mục, dùng để tạo URL thân thiện');
             $table->string('logo')->nullable()->comment('Logo của danh mục');
             $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade');
             $table->text('description')->nullable();
@@ -64,7 +98,6 @@ return new class extends Migration
             // Khóa ngoại liên kết danh mục
             $table->foreignId('category_id')
                 ->constrained('categories')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
 
             // location
@@ -87,18 +120,16 @@ return new class extends Migration
             $table->string('facebook_page')->nullable()->comment('Trang Facebook của cửa hàng');
             $table->string('instagram_page')->nullable()->comment('Trang Instagram của cửa hàng');
             $table->string('tiktok_page')->nullable()->comment('Trang TikTok của cửa hàng');
-            $table->string('youtube_channel')->nullable()->comment('Kênh YouTube của cửa hàng');
+            $table->string('youtube_page')->nullable()->comment('Kênh YouTube của cửa hàng');
 
             // Thông tin về thời gian hoạt động của cửa hàng
             $table->dateTime('opening_time')->comment('Thời gian mở cửa');
             $table->dateTime('closing_time')->comment('Thời gian đóng cửa');
 
-            $table->tinyInteger('status')
-                ->comment('Trạng thái, Lưu trong enum StoreStatus');
+            $table->tinyInteger('status')->comment('Trạng thái, Lưu trong enum StoreStatus');
+            $table->string('view')->default('0')->comment('Số lượt xem của cửa hàng, lưu trữ dưới dạng chuỗi để tránh lỗi tràn số nguyên');
             $table->boolean('featured')->default(false)->comment('Cửa hàng nổi bật, mặc định là false');
             $table->integer('sorting_order')->nullable()->comment('Thứ tự sắp xếp của cửa hàng, nếu cửa hàng nổi bật thì sẽ có thứ tự sắp xếp cao hơn các cửa hàng khác');
-
-
 
             $table->softDeletes();
             $table->timestamps();
@@ -110,7 +141,6 @@ return new class extends Migration
             $table->comment('Bảng store_files lưu trữ các tệp tin liên quan đến cửa hàng');
             $table->foreignId('store_id')
                 ->constrained('stores')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->string('file_path')->comment('Đường dẫn đến tệp đính kèm');
             $table->string('file_name')->comment('Tên tệp đính kèm');
@@ -121,17 +151,30 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        // Tạo bảng bookings để lưu trữ các lịch đặt của khách hàng
+        Schema::create('bookings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('store_id')
+                ->nullable()
+                ->constrained('stores')
+                ->onDelete('cascade');
+            $table->string('customer_name')->comment('Tên khách hàng đặt lịch');
+            $table->string('customer_phone')->comment('Số điện thoại khách hàng đặt lịch');
+            $table->string('customer_email')->nullable()->comment('Email khách hàng đặt lịch');
+            $table->text('note')->nullable()->comment('Ghi chú thêm từ khách hàng');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         // Tạo bảng reviews để lưu trữ các đánh giá của người dùng về cửa hàng
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->comment('Bảng store_reviews lưu trữ các đánh giá của người dùng về cửa hàng');
             $table->foreignId('store_id')
                 ->constrained('stores')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreignId('user_id')
                 ->constrained('users')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->tinyInteger('rating')->comment('Đánh giá của người dùng, từ 1 đến 5');
             $table->text('review')->nullable()->comment('Nội dung đánh giá của người dùng');
@@ -146,7 +189,6 @@ return new class extends Migration
             $table->comment('Bảng review_images lưu trữ các hình ảnh liên quan đến đánh giá của người dùng');
             $table->foreignId('review_id')
                 ->constrained('reviews')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->string('image_path')->comment('Đường dẫn đến hình ảnh đánh giá');
             $table->string('image_name')->comment('Tên hình ảnh đánh giá');
@@ -157,39 +199,64 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        // Tạo bảng article_categories để lưu trữ các danh mục bài viết
-        Schema::create('article_categories', function (Blueprint $table) {
-            $table->id();
-            $table->comment('Bảng article_categories lưu trữ các danh mục bài viết');
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('image_path')->nullable();
-            $table->tinyInteger('status')->default(0);
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         // Tạo bảng articles để lưu trữ các bài viết
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->comment('Bảng articles lưu trữ các bài viết');
             $table->foreignId('category_id')
                 ->constrained('article_categories')
-                ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
             $table->string('title')->comment('Tiêu đề bài viết');
             $table->text('content')->comment('Nội dung bài viết');
             $table->string('author')->comment('Tác giả của bài viết');
             $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện của bài viết');
-            $table->bigInteger('view_count')->default(0)->comment('Số lượt xem của bài viết');
+            $table->string('view')->default('0')->comment('Số lượt xem của bài viết, lưu trữ dưới dạng chuỗi để tránh lỗi tràn số nguyên');
+            $table->bigInteger('sort')->default(0)->comment('Thứ tự sắp xếp của bài viết, số nhỏ sẽ được ưu tiên hiển thị trước');
+            $table->tinyInteger('type')->comment('Loại bài viết');
             $table->string('seo_title')->nullable()->comment('Tiêu đề SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
             $table->string('seo_description')->nullable()->comment('Mô tả SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
             $table->string('seo_keywords')->nullable()->comment('Từ khóa SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
             $table->tinyInteger('status')->comment('Trạng thái của bài viết, lưu trữ trong enum ArticleStatus');
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        // Tạo bảng banners để lưu trữ các banner quảng cáo
+        Schema::create('banners', function (Blueprint $table) {
+            $table->id();
+            $table->comment('Bảng articles lưu trữ các bài viết');
+            $table->boolean('banner_index')->default(false)->comment('Banner hiển thị ở trang chủ');
+            $table->string('link')->comment('Liên kết của banner');
+            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện của bài viết');
+            $table->bigInteger('sort')->default(0)->comment('Thứ tự sắp xếp, số nhỏ sẽ được ưu tiên hiển thị trước');
+            $table->boolean('show')->comment('Trạng thái');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        // Tạo bảng website_infos để lưu trữ thông tin về website, fix cứng
+        Schema::create('website_infos', function (Blueprint $table) {
+            $table->id();
+            $table->comment('Bảng website_infos lưu trữ thông tin về website, fix cứng');
+            $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
+            $table->string('title')->comment('Tiêu đề bài viết');
+            $table->text('content')->comment('Nội dung bài viết');
+            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện của bài viết');
+            $table->string('seo_title')->nullable()->comment('Tiêu đề SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
+            $table->string('seo_description')->nullable()->comment('Mô tả SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
+            $table->string('seo_keywords')->nullable()->comment('Từ khóa SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
+            $table->timestamps();
+        });
+
+        // Tạo bảng configs để lưu trữ các cấu hình của hệ thống
+        Schema::create('configs', function (Blueprint $table) {
+            $table->id();
+            $table->comment('Bảng configs lưu trữ các cấu hình của hệ thống');
+            $table->string('config_key')->unique();
+            $table->text('config_value');
+            $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -198,14 +265,20 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('configs');
+        Schema::dropIfExists('website_infos');
         Schema::dropIfExists('articles');
-        Schema::dropIfExists('article_categories');
         Schema::dropIfExists('review_images');
         Schema::dropIfExists('reviews');
+        Schema::dropIfExists('bookings');
         Schema::dropIfExists('store_files');
         Schema::dropIfExists('stores');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('wards');
         Schema::dropIfExists('provinces');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('banners');
     }
 };
