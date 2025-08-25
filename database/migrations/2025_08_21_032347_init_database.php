@@ -204,7 +204,7 @@ return new class extends Migration
             $table->id();
             $table->comment('Bảng articles lưu trữ các bài viết');
             $table->foreignId('category_id')
-                ->constrained('article_categories')
+                ->constrained('categories')
                 ->onDelete('cascade');
             $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
             $table->string('title')->comment('Tiêu đề bài viết');
