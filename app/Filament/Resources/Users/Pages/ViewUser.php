@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Pages;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Actions;
 
 class ViewUser extends ViewRecord
 {
@@ -14,6 +15,16 @@ class ViewUser extends ViewRecord
     {
         return [
             EditAction::make(),
+            Actions\EditAction::make()
+            ->label('Chỉnh sửa'),
+        ];
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            url()->previous() => 'Người dùng',
+            '' => 'Xem người dùng',
         ];
     }
 }

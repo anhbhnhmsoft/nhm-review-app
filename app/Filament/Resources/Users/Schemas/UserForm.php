@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Enums\User\UserRole;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
@@ -14,22 +17,34 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Tên')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('Email')
                     ->email()
                     ->required(),
-                TextInput::make('avatar_path'),
+                FileUpload::make('avatar_path')
+                    ->label('Ảnh đại diện')
+                    ->image()
+                    ->imageEditor()
+                    ->disk('public')
+                    ->directory('avatars')
+                    ->visibility('public')
+                    ->nullable(),
+                Hidden::make('role')
+                    ->default(UserRole::USER->value),
                 TextInput::make('phone')
+                    ->label('Số điện thoại')
                     ->tel(),
-                TextInput::make('address'),
+                TextInput::make('address')
+                    ->label('Địa chỉ'),
                 Textarea::make('introduce')
+                    ->label('Giới thiệu')
                     ->columnSpanFull(),
-                TextInput::make('role')
-                    ->required()
-                    ->numeric(),
+
                 DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
+                    ->label('Mật khẩu')
                     ->password()
                     ->required(),
             ]);
