@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\User\UserRole;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -62,5 +63,10 @@ class User extends Authenticatable
                 $model->id = HelperFunction::getTimestampAsId();
             }
         });
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::ADMIN;
     }
 }
