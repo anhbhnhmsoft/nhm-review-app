@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Enums\User\UserRole;
+use App\Utils\Constants\UserRole;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;

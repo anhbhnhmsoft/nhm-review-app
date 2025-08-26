@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\User;
+namespace App\Utils\Constants;
 
 enum UserRole: int
 {
