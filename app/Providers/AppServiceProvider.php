@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\BannerService;
+use App\Services\CategoryService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(BannerService::class, fn() => new BannerService());
+        $this->app->singleton(CategoryService::class, fn() => new CategoryService());
+
     }
 
     /**

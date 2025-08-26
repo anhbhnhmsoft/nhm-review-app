@@ -17,10 +17,10 @@ final class HelperFunction
         return (int)$formatted;
     }
 
-    public static function generateURLFilePath(?string $filePath): ?string
+    public static function generateURLImagePath(?string $filePath): ?string
     {
         if (!empty($filePath)) {
-            return route('loadfile', ['file_path' => $filePath]);
+            return route('public_image', ['file_path' => $filePath]);
         }
         return null;
     }

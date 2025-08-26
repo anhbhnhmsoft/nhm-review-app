@@ -13,9 +13,11 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-
 .section {
     @apply px-[280px] py-[60px] relative
+}
+.section_absolute{
+    @apply px-[280px] absolute
 }
 
 .swiper-button-next::after,
