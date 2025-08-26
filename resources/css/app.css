@@ -1,7 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "daisyui" {
+    themes: nord --default;
+}
 
-[x-cloak] {
-    display: none;
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+
+.section {
+    @apply px-[280px] py-[60px] relative
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    content: '' !important; /* Xóa icon mặc định */
+}
+.swiper-pagination-bullet-active{
+    @apply !bg-gray-600;
 }
