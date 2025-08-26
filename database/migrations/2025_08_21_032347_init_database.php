@@ -203,9 +203,6 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->comment('Bảng articles lưu trữ các bài viết');
-            $table->foreignId('category_id')
-                ->constrained('categories')
-                ->onDelete('cascade');
             $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
             $table->string('title')->comment('Tiêu đề bài viết');
             $table->text('content')->comment('Nội dung bài viết');
