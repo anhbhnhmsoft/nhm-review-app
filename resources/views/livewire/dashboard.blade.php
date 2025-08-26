@@ -1,3 +1,7 @@
+@php
+    use App\Utils\HelperFunction;
+
+@endphp
 <main>
     @section('vite_includes')
         @vite(['resources/js/dashboard.js'])
@@ -23,71 +27,84 @@
         </a>
     </nav>
 
-    {{-- banner --}}
+    {{-- banner index --}}
     <section class="swiper-container w-full overflow-x-hidden" id="banner__header">
         <div class="swiper-wrapper">
-            <a href="#" class="swiper-slide">
-                <img src="{{asset('images/banner1.png')}}" class="w-full h-[800px] object-cover">
-            </a>
-            <a href="#" class="swiper-slide">
-                <img src="{{asset('images/banner2.png')}}" class="w-full h-[800px] object-cover">
-            </a>
-            <a href="#" class="swiper-slide">
-                <img src="{{asset('images/banner3.png')}}" class="w-full h-[800px] object-cover">
-            </a>
+            @if($banner_index && $banner_index->count() > 0)
+                @foreach($banner_index as $bannerIndexValue)
+                    <a href="{{ $bannerIndexValue->link ?: "#" }}" class="swiper-slide">
+                        <img src="{{HelperFunction::generateURLImagePath($bannerIndexValue->image_path)}}"
+                             alt="{{$bannerIndexValue->alt_banner ?: "AFY - App review số 1"}}"
+                             class="w-full h-[800px] object-cover"
+                             loading="lazy"
+                        >
+                    </a>
+                @endforeach
+            @else
+                <a href="#" class="swiper-slide">
+                    <img src="{{asset('images/no-image.jpg')}}" class="w-full h-[800px] object-cover">
+                </a>
+            @endif
         </div>
     </section>
 
     {{--  badge category + search   --}}
     <section class="section bg-white !pt-[121px]">
         {{--  search  --}}
-        <div
-            class="absolute inline-flex items-center gap-4 bg-white rounded-lg shadow-sm px-[60px] py-[30px] top-[-60px] left-1/2 transform -translate-x-1/2 z-10">
-            <input type="text" placeholder="Bạn muốn tìm kiếm gì và ở đâu? Hãy tìm trên Afy ngay nhé"
-                   class="input !border-none !outline-none px-[25px] !py-[23px] min-w-[450px]"/>
-            <button class="btn text-white bg-blue-600 hover:bg-blue-400 rounded-lg px-[25px] py-[23px]">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                     class="size-8 text-white">
-                    <path fill-rule="evenodd"
-                          d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-                          clip-rule="evenodd"/>
-                </svg>
-                <span class="text-base">Khu vực</span>
-            </button>
-            <button class="btn text-white bg-green-600 hover:bg-green-400 rounded-lg px-[25px] py-[23px]">
-                <span class="text-base">Tìm địa điểm</span>
-            </button>
+        <div class="section_absolute w-full flex top-[-60px]  left-0 right-0 z-10">
+            <div class="grid grid-cols-4 w-full items-center px-[40px] py-[20px] gap-4 bg-white rounded-lg shadow-sm">
+                <input type="text" placeholder="Bạn muốn tìm kiếm gì và ở đâu? Hãy tìm trên Afy ngay nhé"
+                       class="input !border-none !outline-none px-[25px] !py-[23px] w-full col-span-2"/>
+                <button class="btn text-white bg-blue-600 hover:bg-blue-400 rounded-lg px-[25px] py-[23px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                         class="size-8 text-white">
+                        <path fill-rule="evenodd"
+                              d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-base">Khu vực</span>
+                </button>
+                <button class="btn text-white bg-green-600 hover:bg-green-400 rounded-lg px-[25px] py-[23px]">
+                    <span class="text-base">Tìm địa điểm</span>
+                </button>
+            </div>
         </div>
         {{--  category   --}}
-        <div class="grid lg:grid-cols-6 gap-[40px]">
-            @foreach(range(0, 10) as $number)
-                <div>
-                    <div class="group flex flex-col items-center justify-center gap-4 w-fit h-fit">
-                        <div
-                            class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
-                            <img src="{{asset('images/logo/amthuc.svg')}}" alt="Amthuc"
-                                 class="w-14 h-14 object-contain"/>
-                        </div>
-                        <p class="font-bold uppercase text-lg">
-                            Ẩm thực
-                        </p>
-                    </div>
-                </div>
-                @if($loop->last)
-                    <div>
-                        <div class="group flex flex-col items-center justify-center gap-4 w-fit h-fit">
-                            <div
-                                class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
-                                <img src="{{asset('images/logo/them.svg')}}" alt="Amthuc"
-                                     class="w-14 h-14 object-contain"/>
+        <div class="grid lg:grid-cols-7 gap-[40px]">
+            @if($categories && $categories->count() > 0)
+                @foreach($categories as $category)
+                    @if($category->show_header_home_page)
+                        <div class="flex items-center justify-center">
+                            <div class="group flex flex-col items-center justify-center gap-4 w-fit h-fit">
+                                <div
+                                    class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
+                                    <img src="{{HelperFunction::generateURLImagePath($category->logo)}}"
+                                         alt="{{$category->slug}}"
+                                         class="w-14 h-14 object-contain"/>
+                                </div>
+                                <p class="font-bold uppercase text-lg">
+                                    {{$category->name}}
+                                </p>
                             </div>
-                            <p class="font-bold uppercase text-lg">
-                                Thêm
-                            </p>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+
+                    @if($loop->last)
+                        <div class="flex items-center justify-center">
+                            <div class="group flex flex-col items-center justify-center gap-4 w-fit h-fit">
+                                <div
+                                    class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
+                                    <img src="{{asset('images/logo/them.svg')}}" alt="xem-them"
+                                         class="w-14 h-14 object-contain"/>
+                                </div>
+                                <p class="font-bold uppercase text-lg">
+                                    Thêm
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            @endif
         </div>
     </section>
 
@@ -102,15 +119,28 @@
     </section>
 
     <section class="section bg-white">
+        {{--  Banner   --}}
         <div class="relative">
             <div class="swiper-container !w-full overflow-x-hidden" id="banner__ads">
                 <div class="swiper-wrapper w-full">
-                    @foreach(range(0, 7) as $number)
-                        <a href="#" class="swiper-slide">
-                            <img src="{{asset('images/no-image.jpg')}}" alt="banner"
-                                 class="object-cover w-full h-[220px] rounded-lg">
-                        </a>
-                    @endforeach
+                    @if($banners && $banners->count() > 0)
+                        @foreach($banners as $bannerValue)
+                            <a href="{{ $bannerValue->link ?: "#" }}" class="swiper-slide">
+                                <img src="{{HelperFunction::generateURLImagePath($bannerValue->image_path)}}"
+                                     alt="{{$bannerValue->alt_banner ?: "AFY - App review số 1"}}"
+                                     class="object-cover w-full h-[220px] rounded-lg"
+                                     loading="lazy"
+                                >
+                            </a>
+                        @endforeach
+                    @else
+                        @foreach(range(0, 4) as $number)
+                            <a href="#" class="swiper-slide">
+                                <img src="{{asset('images/no-image.jpg')}}"
+                                     class="object-cover w-full h-[220px] rounded-lg" alt="AFY - App review số 1">
+                            </a>
+                        @endforeach
+                    @endif
                 </div>
                 <div
                     class="swiper-button-prev !w-[40px] !h-[40px] bg-white border rounded-full !border-gray-600 !left-[-23px] shadow-md">
@@ -118,7 +148,6 @@
                          stroke="currentColor" class="!size-5 text-gray-600">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
                     </svg>
-
                 </div>
                 <div
                     class="swiper-button-next !w-[40px] !h-[40px] bg-white border rounded-full !border-gray-600 !right-[-23px] shadow-md">

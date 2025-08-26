@@ -23,7 +23,7 @@ class UserInfolist
                     ->circular()
                     ->state(function ($record) {
                         if (! empty($record->avatar_path)) {
-                            return HelperFunction::generateURLFilePath($record->avatar_path);
+                            return HelperFunction::generateURLImagePath($record->avatar_path);
                         }
                         return HelperFunction::generateUiAvatarUrl($record->name, $record->email);
                     }),

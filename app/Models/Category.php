@@ -15,7 +15,6 @@ class Category extends Model
     protected $fillable = [
         'id',
         'name',
-        'name_home_page',
         'show_header_home_page',
         'show_index_home_page',
         'slug',
@@ -43,6 +42,11 @@ class Category extends Model
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     // Mối quan hệ với bảng Store (Một danh mục có nhiều cửa hàng)

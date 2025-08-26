@@ -17,6 +17,7 @@ class Banner extends Model
         'image_path',
         'sort',
         'show',
+        'alt_banner'
     ];
 
     protected $casts = [

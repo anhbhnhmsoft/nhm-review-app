@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\User\UserRole;
+use App\Utils\Constants\UserRole;
 use App\Utils\HelperFunction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
