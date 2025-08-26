@@ -203,9 +203,6 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->comment('Bảng articles lưu trữ các bài viết');
-            $table->foreignId('category_id')
-                ->constrained('article_categories')
-                ->onDelete('cascade');
             $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
             $table->string('title')->comment('Tiêu đề bài viết');
             $table->text('content')->comment('Nội dung bài viết');
@@ -227,8 +224,8 @@ return new class extends Migration
             $table->id();
             $table->comment('Bảng articles lưu trữ các bài viết');
             $table->boolean('banner_index')->default(false)->comment('Banner hiển thị ở trang chủ');
-            $table->string('link')->comment('Liên kết của banner');
-            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện của bài viết');
+            $table->string('link')->nullable()->comment('Liên kết của banner');
+            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện');
             $table->bigInteger('sort')->default(0)->comment('Thứ tự sắp xếp, số nhỏ sẽ được ưu tiên hiển thị trước');
             $table->boolean('show')->comment('Trạng thái');
             $table->timestamps();
