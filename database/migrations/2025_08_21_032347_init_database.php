@@ -76,7 +76,6 @@ return new class extends Migration
             $table->id();
             $table->comment('Bảng categories lưu trữ các danh mục của cửa hàng');
             $table->string('name')->comment('Tên danh mục');
-            $table->string('name_home_page')->nullable()->comment('Tên danh mục, dùng để hiển thị trên trang chủ');
             $table->boolean('show_header_home_page')->default(false)->comment('Cho phép hiển thị danh mục trên header trang chủ hay không');
             $table->boolean('show_index_home_page')->default(false)->comment('Cho phép hiển thị danh mục trên trang chủ hay không');
             $table->string('slug')->unique()->comment('Slug của danh mục, dùng để tạo URL thân thiện');
@@ -222,10 +221,11 @@ return new class extends Migration
         // Tạo bảng banners để lưu trữ các banner quảng cáo
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->comment('Bảng articles lưu trữ các bài viết');
+            $table->comment('Bảng banners lưu trữ banner quảng cáo');
             $table->boolean('banner_index')->default(false)->comment('Banner hiển thị ở trang chủ');
             $table->string('link')->nullable()->comment('Liên kết của banner');
             $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện');
+            $table->string('alt_banner')->nullable()->comment('alt banner seo');
             $table->bigInteger('sort')->default(0)->comment('Thứ tự sắp xếp, số nhỏ sẽ được ưu tiên hiển thị trước');
             $table->boolean('show')->comment('Trạng thái');
             $table->timestamps();
@@ -255,6 +255,24 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('utilities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique()->comment('Tên tiện ích');
+            $table->text('description')->nullable()->comment('Mô tả tiện ích');
+            $table->timestamps();
+        });
+
+        Schema::create('store_utility', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('store_id')
+                ->constrained('stores')
+                ->onDelete('cascade');
+            $table->foreignId('utility_id')
+                ->constrained('utilities')
+                ->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -262,6 +280,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('store_utility');
+        Schema::dropIfExists('utilities');
         Schema::dropIfExists('configs');
         Schema::dropIfExists('website_infos');
         Schema::dropIfExists('articles');

@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class FileController extends Controller
 {
 
-
-    public function loadfile($file_path)
+    public function image($file_path)
     {
         $cacheTime = 60 * 60 * 48; // 2 ngày
 
