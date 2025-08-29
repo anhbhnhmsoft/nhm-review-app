@@ -17,4 +17,3 @@ Route::prefix('common')->group(function () {
     Route::get('/district/{code}', [CommonController::class, 'getDistricts']);
     Route::get('/ward/{code}', [CommonController::class, 'getWards']);
 });
-
