@@ -7,24 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ward extends Model
 {
+
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'code',
-        'english_name',
-        'administrative_level',
-        'decree',
-        'province_code',
-    ];
+    protected $fillable = ['name', 'code', 'division_type', 'district_code'];
 
-    // Mối quan hệ với bảng Province (Mỗi phường xã thuộc một tỉnh thành)
-    public function province()
+    // Mối quan hệ với bảng district
+    public function district()
     {
-        return $this->belongsTo(Province::class, 'province_code', 'code');
+        return $this->belongsTo(District::class, 'district_code', 'code');
     }
 
-    // Mối quan hệ với bảng Stores (Mỗi phường xã có nhiều cửa hàng)
     public function stores()
     {
         return $this->hasMany(Store::class, 'ward_code', 'code');
