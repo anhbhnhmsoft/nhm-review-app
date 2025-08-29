@@ -19,6 +19,7 @@ class Store extends Model
         'slug',
         'category_id',
         'province_code',
+        'district_code',
         'ward_code',
         'address',
         'latitude',
@@ -68,6 +69,11 @@ class Store extends Model
         return $this->belongsTo(Province::class, 'province_code', 'code');
     }
 
+    // Mối quan hệ với bảng Ward (Một cửa hàng thuộc một Quận huyện)
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_code', 'code');
+    }
     // Mối quan hệ với bảng Ward (Một cửa hàng thuộc một phường xã)
     public function ward()
     {
@@ -89,5 +95,11 @@ class Store extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    // Mối quan hệ với bảng store_utility
+    public function utilities()
+    {
+        return $this->belongsToMany(Utility::class, 'store_utility', 'store_id', 'utility_id');
     }
 }

@@ -1,0 +1,19 @@
+#map-place-autocomplete-card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.10) 0px 5px 15px;
+    margin: 10px;
+    padding: 5px;
+}
+
+gmp-place-autocomplete {
+    width: 300px;
+}
+
+#infowindow-content .title {
+    font-weight: bold;
+}
+
+#map #infowindow-content {
+    display: inline;
+}

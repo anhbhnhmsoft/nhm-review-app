@@ -46,28 +46,35 @@ return new class extends Migration
         Schema::create('provinces', function (Blueprint $table) {;
             $table->id();
             $table->comment('Bảng provinces lưu trữ các tỉnh thành');
-            $table->string('name')->comment('Tên tỉnh thành');
-            $table->string('code')->unique()->comment('Mã tỉnh thành');
-            $table->string('english_name')->nullable()->comment('Tên tiếng Anh của tỉnh thành');
-            $table->string('administrative_level')->nullable()->comment('Cấp hành chính của tỉnh thành');
-            $table->string('decree')->nullable()->comment('Số quyết định thành lập tỉnh thành');
+            $table->string('name')->comment('Tên');
+            $table->string('code')->unique()->comment('Mã');
+            $table->string('division_type')->nullable()->comment('Cấp hành chính');
             $table->timestamps();
         });
 
         // Tạo bảng districts để lưu trữ thông tin về các quận huyện
+        Schema::create('districts', function (Blueprint $table) {;
+            $table->id();
+            $table->comment('Bảng districts lưu trữ các quận huyện');
+            $table->string('name')->comment('Tên');
+            $table->string('code')->unique()->comment('Mã');
+            $table->string('division_type')->nullable()->comment('Cấp hành chính');
+            $table->string('province_code');
+            $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete();
+            $table->timestamps();
+        });
+
+        // Tạo bảng districts để lưu trữ thông tin về các phường xã
         Schema::create('wards', function (Blueprint $table) {;
             $table->id();
             $table->comment('Bảng ward lưu trữ các phường xã');
-            $table->string('name')->comment('Tên phường xã');
-            $table->string('code')->comment('Mã phường xã');
-            $table->string('english_name')->nullable()->comment('Tên tiếng Anh của phường xã');
-            $table->string('administrative_level')->nullable()->comment('Cấp hành chính của phường xã');
-            $table->string('decree')->nullable()->comment('Số quyết định thành lập phường xã');
+            $table->string('name')->comment('Tên');
+            $table->string('code')->unique()->comment('Mã');
+            $table->string('division_type')->nullable()->comment('Cấp hành chính');
 
             // Khóa ngoại nối bằng code
-            $table->string('province_code');
-            $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete();
-            $table->unique(['code', 'province_code']);
+            $table->string('district_code');
+            $table->foreign('district_code')->references('code')->on('districts')->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -101,13 +108,15 @@ return new class extends Migration
 
             // location
             $table->string('province_code')->comment('Mã tỉnh thành liên kết');
+            $table->string('district_code')->comment('Mã quận huyện liên kết');
             $table->string('ward_code')->comment('Mã xã phường liên kết');
             $table->foreign('province_code')->references('code')->on('provinces')->cascadeOnDelete();
+            $table->foreign('district_code')->references('code')->on('districts')->cascadeOnDelete();
             $table->foreign('ward_code')->references('code')->on('wards')->cascadeOnDelete();
             $table->string('address')->comment('Địa chỉ cụ thể');
             $table->string('latitude')->nullable()->comment('Vĩ độ');
             $table->string('longitude')->nullable()->comment('Kinh độ');
-            $table->string('google_map_place_id')->nullable('ID của địa điểm trên Google Maps');
+            $table->string('google_map_place_id')->nullable();
 
             // Thông tin liên hệ
             $table->string('logo_path')->comment('Logo của cửa hàng');
@@ -122,8 +131,8 @@ return new class extends Migration
             $table->string('youtube_page')->nullable()->comment('Kênh YouTube của cửa hàng');
 
             // Thông tin về thời gian hoạt động của cửa hàng
-            $table->dateTime('opening_time')->comment('Thời gian mở cửa');
-            $table->dateTime('closing_time')->comment('Thời gian đóng cửa');
+            $table->string('opening_time',10)->comment('Thời gian mở cửa');
+            $table->string('closing_time',10)->comment('Thời gian đóng cửa');
 
             $table->tinyInteger('status')->comment('Trạng thái, Lưu trong enum StoreStatus');
             $table->string('view')->default('0')->comment('Số lượt xem của cửa hàng, lưu trữ dưới dạng chuỗi để tránh lỗi tràn số nguyên');
@@ -259,7 +268,8 @@ return new class extends Migration
         Schema::create('utilities', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->comment('Tên tiện ích');
-            $table->text('description')->nullable()->comment('Mô tả tiện ích');
+            $table->text('description')->nullable()->comment('Mô tả tiện ích, nếu có');
+            $table->text('icon_svg')->nullable()->comment('icon tiện ích, nếu có');
             $table->timestamps();
         });
 
