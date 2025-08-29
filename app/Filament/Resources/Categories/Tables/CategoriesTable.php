@@ -38,7 +38,7 @@ class CategoriesTable
                     ->label('Hiển thị trên trang chủ')
                     ->boolean(),
                 ImageColumn::make('logo')
-                    ->getStateUsing(fn($record) => HelperFunction::generateURLFilePath($record->logo))
+                    ->getStateUsing(fn($record) => HelperFunction::generateURLImagePath($record->logo))
                     ->label('Hình ảnh')
                     ->disk('public'),
                 TextColumn::make('parent_id')

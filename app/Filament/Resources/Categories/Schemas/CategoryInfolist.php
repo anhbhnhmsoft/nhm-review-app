@@ -29,7 +29,7 @@ class CategoryInfolist
                     ->label('Đường dẫn'),
                 ImageEntry::make('logo')
                     ->label('Hình ảnh')
-                    ->getStateUsing(fn($record) => HelperFunction::generateURLFilePath($record->logo))
+                    ->getStateUsing(fn($record) => HelperFunction::generateURLImagePath($record->logo))
                     ->disk('public'),
                 TextEntry::make('parent_id')
                     ->label('Danh mục cha')
