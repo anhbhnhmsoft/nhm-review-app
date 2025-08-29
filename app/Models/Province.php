@@ -10,18 +10,13 @@ class Province extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'code',
-        'english_name',
-        'administrative_level',
-        'decree',
+        'name', 'code', 'division_type'
     ];
 
-    public function wards()
+    public function districts()
     {
-        return $this->hasMany(Ward::class, 'province_code', 'code');
+        return $this->hasMany(District::class, 'province_code', 'code');
     }
-
     public function stores()
     {
         return $this->hasMany(Store::class, 'province_code', 'code');
