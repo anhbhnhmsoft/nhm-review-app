@@ -15,6 +15,7 @@ class CommonController extends Controller
 
     public function getKeyGoogleMap()
     {
+
         return response()->json([
             'key' => config('services.google.map_key_api'),
             'map_id' => config('services.google.map_id'),
