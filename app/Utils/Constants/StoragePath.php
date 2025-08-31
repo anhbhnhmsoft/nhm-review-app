@@ -7,6 +7,7 @@ enum StoragePath:string
     case BANNER_PATH = "banner_images";
     case CATEGORY_PATH = "category_images";
     case STORE_PATH = "stores";
+    case ARTICLE_PATH = "articles";
 
 
     public static function makePath(StoragePath $type, string $filename): string

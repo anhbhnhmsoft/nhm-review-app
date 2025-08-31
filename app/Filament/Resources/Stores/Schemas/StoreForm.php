@@ -60,6 +60,7 @@ class StoreForm
                                 ->label('Tên địa điểm')
                                 ->trim()
                                 ->minLength(10)
+                                ->maxLength(255)
                                 ->placeholder('Tối thiểu 10 kí tự, tối đa 255 kí tự')
                                 ->live(debounce: 500)
                                 ->afterStateUpdated(function ($state, callable $set) {
@@ -78,8 +79,10 @@ class StoreForm
                             TextInput::make('slug')
                                 ->label('Đường dẫn slug')
                                 ->required()
+                                ->minLength(10)
+                                ->maxLength(255)
                                 ->regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')
-                                ->helperText('Slug sẽ tự sinh ra khi bạn nhập tên địa điểm, hoặc baạn có thể tự sửa theo mong muốn')
+                                ->helperText('Slug sẽ tự sinh ra khi bạn nhập tên địa điểm, hoặc bạn có thể tự sửa theo mong muốn')
                                 ->rules([
                                     fn(Get $get) => function (string $attribute, $value, Closure $fail) use ($get) {
                                         $id = $get('id');
@@ -102,6 +105,8 @@ class StoreForm
                                 ->validationMessages([
                                     'required' => 'Vui lòng nhập slug.',
                                     'regex' => 'Slug chỉ được chứa chữ thường, số và dấu gạch ngang, không có ký tự đặc biệt hoặc khoảng trắng.',
+                                    'minLength' => 'Phải có ít nhất 10 ký tự.',
+                                    'maxLength' => 'Không được vượt quá 255 ký tự.',
                                 ]),
                             Select::make('category_id')
                                 ->searchable()
