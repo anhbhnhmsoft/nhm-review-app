@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Stores\Tables;
 use App\Models\Category;
 use App\Utils\Constants\CategoryStatus;
 use App\Utils\Constants\StoreStatus;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -30,7 +31,7 @@ class StoresTable
                     ->visibility('public'),
                 TextColumn::make('name')
                     ->label('Tên')
-                    ->limit(50)
+                    ->limit(30)
                     ->tooltip(function ($column): ?string {
                         $state = $column->getState();
                         if (strlen($state) <= $column->getCharacterLimit()) {
@@ -40,7 +41,7 @@ class StoresTable
                     })
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->limit(50)
+                    ->limit(30)
                     ->tooltip(function ($column): ?string {
                         $state = $column->getState();
                         if (strlen($state) <= $column->getCharacterLimit()) {
@@ -107,6 +108,7 @@ class StoresTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()->visible(),
             ]);
     }
 }

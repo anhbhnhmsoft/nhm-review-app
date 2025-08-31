@@ -241,20 +241,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        // Tạo bảng website_infos để lưu trữ thông tin về website, fix cứng
-        Schema::create('website_infos', function (Blueprint $table) {
-            $table->id();
-            $table->comment('Bảng website_infos lưu trữ thông tin về website, fix cứng');
-            $table->string('slug')->unique()->comment('Slug của bài viết, dùng để tạo URL thân thiện');
-            $table->string('title')->comment('Tiêu đề bài viết');
-            $table->text('content')->comment('Nội dung bài viết');
-            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện của bài viết');
-            $table->string('seo_title')->nullable()->comment('Tiêu đề SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
-            $table->string('seo_description')->nullable()->comment('Mô tả SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
-            $table->string('seo_keywords')->nullable()->comment('Từ khóa SEO của bài viết, dùng để tối ưu hóa công cụ tìm kiếm');
-            $table->timestamps();
-        });
-
         // Tạo bảng configs để lưu trữ các cấu hình của hệ thống
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
@@ -293,7 +279,6 @@ return new class extends Migration
         Schema::dropIfExists('store_utility');
         Schema::dropIfExists('utilities');
         Schema::dropIfExists('configs');
-        Schema::dropIfExists('website_infos');
         Schema::dropIfExists('articles');
         Schema::dropIfExists('review_images');
         Schema::dropIfExists('reviews');
