@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Categories\Schemas;
 use App\Utils\Constants\CategoryStatus;
 use App\Utils\HelperFunction;
 use App\Models\Category;
+use App\Utils\Constants\StoragePath;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -34,8 +35,6 @@ class CategoryForm
                         $set('slug', $slug);
                     })
                     ->required(),
-                TextInput::make('name_home_page')
-                    ->label('Tên ở trang chủ'),
                 Toggle::make('show_index_home_page')
                     ->label('Hiển thị ở trang chủ')
                     ->live()
@@ -49,19 +48,32 @@ class CategoryForm
                     ->readOnly()
                     ->required()
                     ->unique(ignoreRecord: true),
-                FileUpload::make('logo')
-                    ->label('Hình ảnh')
-                    ->image()
-                    ->imageEditor()
-                    ->directory('categories')
-                    ->visibility('public')
-                    ->required(),
                 SelectTree::make('parent_id')
                     ->label('Danh mục cha')
                     ->relationship('parent','name','parent_id')
                     ->searchable()
                     ->placeholder('Chọn danh mục cha')
                     ->nullable(),
+                FileUpload::make('logo')
+                    ->label('Hình ảnh')
+                    ->image()
+                    ->imageEditor()
+                    ->storeFiles(false)
+                    ->disk('public')
+                    ->directory(StoragePath::CATEGORY_PATH->value)
+                    ->visibility('public')
+                    ->maxSize(10240)
+                    ->helperText('Vui lòng chọn ảnh đại diện cho danh mục. Định dạng hợp lệ: JPG, PNG. Dung lượng tối đa 10MB.')
+                    ->downloadable()
+                    ->previewable()
+                    ->openable()
+                    ->required()
+                    ->columnSpanFull()
+                    ->validationMessages([
+                        'required' => 'Vui lòng chọn ảnh đại diện cho danh mục.',
+                        'image' => 'Tệp tải lên phải là hình ảnh hợp lệ (JPG, PNG).',
+                        'maxSize' => 'Dung lượng ảnh không được vượt quá 10MB.',
+                ]),
                 Textarea::make('description')
                     ->label('Mô tả')
                     ->columnSpanFull(),
