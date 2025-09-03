@@ -22,30 +22,26 @@ class CategoriesTable
     {
         return $table
             ->columns([
+                ImageColumn::make('logo')
+                    ->visibility('public')
+                    ->label('Hình ảnh')
+                    ->disk('public'),
                 TextColumn::make('name')
                     ->label('Tên danh mục')
                     ->searchable(),
-                TextColumn::make('name_home_page')
-                    ->alignCenter()
-                    ->label('Tên danh mục trang chủ')
-                    ->searchable(),
-                IconColumn::make('show_header_home_page')
-                    ->label('Hiển thị trên trang chủ')
-                    ->alignCenter()
-                    ->boolean(),
                 IconColumn::make('show_index_home_page')
                     ->alignCenter()
                     ->label('Hiển thị trên trang chủ')
                     ->boolean(),
-                ImageColumn::make('logo')
-                    ->getStateUsing(fn($record) => HelperFunction::generateURLImagePath($record->logo))
-                    ->label('Hình ảnh')
-                    ->disk('public'),
-                TextColumn::make('parent_id')
+                IconColumn::make('show_header_home_page')
+                    ->label('Hiển thị trên đầu trang chủ')
+                    ->alignCenter()
+                    ->boolean(),
+                TextColumn::make('parent.name')
                     ->label('Danh mục cha')
-                    ->numeric()
                     ->default('Không có')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('status')
                     ->label('Trạng thái')
                     ->badge()
@@ -54,21 +50,6 @@ class CategoriesTable
                         CategoryStatus::INACTIVE->value => 'warning',
                         default => 'default',
                     })->formatStateUsing(fn($state) => $state == CategoryStatus::ACTIVE->value ? 'Hoạt động' : 'Không hoạt động'),
-                TextColumn::make('deleted_at')
-                    ->label('Ngày xóa')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->label('Ngày tạo')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label('Ngày cập nhật')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TrashedFilter::make(),
