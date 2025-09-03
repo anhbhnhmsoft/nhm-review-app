@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Utils\Constants\StoreStatus;
 use App\Utils\HelperFunction;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -56,6 +58,18 @@ class Store extends Model
             }
         });
     }
+
+
+    public function scopeCanShow(Builder $query): Builder
+    {
+        return $query->whereIn('status', [
+            StoreStatus::ACTIVE->value,
+            StoreStatus::PENDING->value,
+        ]);
+    }
+
+
+
 
     // Mối quan hệ với bảng Category (Một cửa hàng thuộc một danh mục)
     public function category()

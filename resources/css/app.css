@@ -16,6 +16,23 @@
 .section {
     @apply px-[280px] py-[60px] relative
 }
+
+.section_inside {
+    @apply m-auto block xl:w-[80rem] p-4;
+}
+
+
+.btn-primary-green {
+    @apply bg-green-600 hover:bg-green-400 text-white border-none outline-none
+}
+.btn-primary-blue {
+    @apply bg-blue-600 hover:bg-blue-400 text-white border-none outline-none
+}
+
+
+
+
+
 .section_absolute{
     @apply px-[280px] absolute
 }

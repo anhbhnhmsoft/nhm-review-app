@@ -25,6 +25,14 @@ final class HelperFunction
         return null;
     }
 
+    public static function generateURLVideoPath(?string $filePath): ?string
+    {
+        if (!empty($filePath)) {
+            return route('public_video', ['file_path' => $filePath]);
+        }
+        return null;
+    }
+
     public static function generateUiAvatarUrl(?string $name, ?string $email): string
     {
         $text = $name ?: ($email ?: 'User');
