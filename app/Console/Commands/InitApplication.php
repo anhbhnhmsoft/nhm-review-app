@@ -4,12 +4,15 @@ namespace App\Console\Commands;
 
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Config;
 use App\Models\District;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\Utility;
 use App\Models\Ward;
 use App\Utils\Constants\CategoryStatus;
+use App\Utils\Constants\ConfigName;
+use App\Utils\Constants\ConfigType;
 use App\Utils\Constants\StoragePath;
 use App\Utils\Constants\UserRole;
 use App\Utils\HelperFunction;
@@ -93,6 +96,13 @@ class InitApplication extends Command
         if (!$r3) {
             DB::rollBack();
             $this->error('Lỗi khi chạy Seeding demo database r3!');
+            return Command::FAILURE;
+        }
+
+        $r4 = $this->seedingConfig();
+        if (!$r4) {
+            DB::rollBack();
+            $this->error('Lỗi khi chạy Seeding demo database r4!');
             return Command::FAILURE;
         }
 
@@ -541,4 +551,59 @@ class InitApplication extends Command
         }
     }
 
+    private function seedingConfig(): bool
+    {
+        $logoPath = StoragePath::makePath(StoragePath::CONFIG_PATH, 'logo.svg');
+        Storage::disk('public')->put($logoPath, file_get_contents(public_path('images/logo.svg')));
+
+        try {
+            Config::query()->insert([
+                [
+                    'config_key' => ConfigName::LOGO->value,
+                    'config_type' => ConfigType::IMAGE->value,
+                    'config_value' => $logoPath,
+                    'description' => 'Cấu hình logo cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::FACEBOOK->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'https://www.facebook.com/profile.php?id=100000000000000',
+                    'description' => 'Cấu hình trang Facebook cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::YOUTUBE->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'https://www.youtube.com/channel/UC1234567890',
+                    'description' => 'Cấu hình trang Youtube cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::TIKTOK->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'https://www.tiktok.com/@username',
+                    'description' => 'Cấu hình trang TikTok cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::INSTAGRAM->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'https://www.instagram.com/username',
+                    'description' => 'Cấu hình trang Instagram cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::FOOTER_COPYRIGHT->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'Copyright © 2025 Cửa hàng',
+                    'description' => 'Cấu hình copyright cửa hàng',
+                ],
+                [
+                    'config_key' => ConfigName::MANAGING_UNIT->value,
+                    'config_type' => ConfigType::STRING->value,
+                    'config_value' => 'Công Ty Công Nghệ MGS Địa chỉ:765A Âu Cơ, P. Tân Định, Q1, TP.HCM',
+                    'description' => 'Đơn vị chủ quản của cửa hàng',
+                ],
+            ]);
+            return true;
+        }catch (\Exception $exception){
+            return false;
+        }
+    }
 }
