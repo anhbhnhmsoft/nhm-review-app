@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@googlemaps/js-api-loader": "^1.16.10",
-        "swiper": "^11.2.10"
+        "swiper": "^11.2.10",
+        "yarn": "^1.22.22"
     }
 }
