@@ -246,6 +246,7 @@ return new class extends Migration
             $table->id();
             $table->comment('Bảng configs lưu trữ các cấu hình của hệ thống');
             $table->string('config_key')->unique();
+            $table->smallInteger('config_type')->nullable()->comment('Loại cấu hình 1: Type image, 2: Type string');
             $table->text('config_value');
             $table->text('description')->nullable();
             $table->timestamps();
