@@ -64,9 +64,9 @@
                     </svg>
                     <span class="text-base">Khu vực</span>
                 </button>
-                <button class="btn text-white bg-green-600 hover:bg-green-400 rounded-lg px-[25px] py-[23px]">
+                <a href="{{ route('search-store') }}" class="btn text-white bg-green-600 hover:bg-green-400 rounded-lg px-[25px] py-[23px]">
                     <span class="text-base">Tìm địa điểm</span>
-                </button>
+                </a>
             </div>
         </div>
         {{--  category   --}}

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', \App\Livewire\Dashboard::class)->name('dashboard');
+Route::get('/search-store', \App\Livewire\SearchStore::class)->name('search-store');
 
 Route::get('/image/{file_path}', [FileController::class, 'image'])
     ->where('file_path', '.*')
