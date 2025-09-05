@@ -6,12 +6,6 @@
             $type = "video";
         }
     }
-    $class = "";
-    if ($render == "full-span"){
-        $class = " col-span-2 row-span-2 ";
-    }elseif ($render == "half-row"){
-        $class = " col-span-2 ";
-    }
 @endphp
 <a
     @if(!$last)
@@ -22,7 +16,7 @@
             data-src="{{\App\Utils\HelperFunction::generateURLVideoPath($path)}}"
         @endif
     @endif
-    class="cursor-pointer relative {{$class}}"
+    class="cursor-pointer relative"
 >
     @if($type == "image")
         <img alt="{{$slug}}" src="{{\App\Utils\HelperFunction::generateURLImagePath($path)}}"

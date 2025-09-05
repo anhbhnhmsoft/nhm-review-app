@@ -26,7 +26,6 @@ class Store extends Model
         'address',
         'latitude',
         'longitude',
-        'google_map_place_id',
         'logo_path',
         'short_description',
         'description',
@@ -68,8 +67,42 @@ class Store extends Model
         ]);
     }
 
+    public function scopeNearBy(Builder $query, float $lat, float $lng, float $radiusKm = 5)
+    {
+        return $query
+            ->select('*')
+            ->selectRaw(
+                '(6371 * acos(cos(radians(?)) * cos(radians(latitude))
+                 * cos(radians(longitude) - radians(?))
+                 + sin(radians(?)) * sin(radians(latitude)) )) AS distance',
+                [$lat, $lng, $lat]
+            )
+            ->having('distance', '<=', $radiusKm)
+            ->orderBy('distance');
+    }
 
+    public function getOverallAverageRating()
+    {
+        $ratings = $this->reviews()
+            ->selectRaw('AVG(rating_location) as avg_location,
+                         AVG(rating_space) as avg_space,
+                         AVG(rating_quality) as avg_quality,
+                         AVG(rating_serve) as avg_serve')
+            ->first();
 
+        if ($ratings) {
+            $totalAverage = (
+                    $ratings->avg_location +
+                    $ratings->avg_space +
+                    $ratings->avg_quality +
+                    $ratings->avg_serve
+                ) / 4;
+
+            return round($totalAverage, 1);
+        }
+
+        return 0;
+    }
 
     // Mối quan hệ với bảng Category (Một cửa hàng thuộc một danh mục)
     public function category()

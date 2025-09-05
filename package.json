@@ -17,6 +17,10 @@
     "dependencies": {
         "@fancyapps/ui": "^6.0.27",
         "@googlemaps/js-api-loader": "^1.16.10",
+        "filepond": "^4.32.8",
+        "filepond-plugin-file-validate-size": "^2.2.8",
+        "filepond-plugin-file-validate-type": "^1.2.9",
+        "filepond-plugin-image-preview": "^4.6.12",
         "swiper": "^11.2.10"
     }
 }

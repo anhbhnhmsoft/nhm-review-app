@@ -12,23 +12,37 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
-
+.filepond--credits{
+    display: none !important;
+}
 .section {
     @apply px-[280px] py-[60px] relative
 }
 
 .section_inside {
-    @apply m-auto block xl:w-[80rem] p-4;
+    @apply lg:m-auto block xl:w-[80rem] py-4 lg:px-4;
 }
 
 
 .btn-primary-green {
-    @apply bg-green-600 hover:bg-green-400 text-white border-none outline-none
-}
-.btn-primary-blue {
-    @apply bg-blue-600 hover:bg-blue-400 text-white border-none outline-none
+    @apply bg-green-600 hover:bg-green-500 text-white border-none outline-none
 }
 
+.btn-primary-gray {
+    @apply bg-gray-600 hover:bg-gray-500 text-white border-none outline-none
+}
+
+.btn-primary-blue {
+    @apply bg-blue-600 hover:bg-blue-500 text-white border-none outline-none
+}
+
+.store_utilities_item svg {
+    @apply size-8 text-green-600
+}
+
+.container_store_detail_maker{
+    @apply p-4 bg-white
+}
 
 
 

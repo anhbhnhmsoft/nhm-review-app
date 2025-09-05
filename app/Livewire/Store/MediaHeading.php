@@ -14,11 +14,10 @@ class MediaHeading extends Component
     public $last;
     public $total_files;
 
-    public function mount($slug, $path,$file_type, $render = '', $last = false, $total_files = 0)
+    public function mount($slug, $path,$file_type, $last = false, $total_files = 0)
     {
         $this->slug = $slug;
         $this->path = $path;
-        $this->render = $render;
         $this->file_type = $file_type;
         $this->last = $last;
         $this->total_files= $total_files;

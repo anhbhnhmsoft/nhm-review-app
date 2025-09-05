@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @livewireStyles
         @include('layouts.head')
     </head>
     <body class="">
@@ -22,5 +23,6 @@
                 </svg>
             </button>
         </div>
+        @livewireScriptConfig
     </body>
 </html>
