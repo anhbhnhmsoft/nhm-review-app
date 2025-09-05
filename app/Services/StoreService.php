@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
-
+use App\Utils\Constants\StoreStatus;
+use App\Utils\HelperFunction;
+use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class StoreService
 {
     protected function queryStoreItem()
@@ -68,4 +71,134 @@ class StoreService
         return 0;
     }
 
+    public function searchStores(array $filters = []): LengthAwarePaginator
+    {
+        try {
+            $query = $this->Filters($filters);
+
+            $lat = $filters['user_lat'] ?? null;
+            $lng = $filters['user_lng'] ?? null;
+            $hasDistance = $this->DistanceSelect($query, $lat, $lng);
+
+            $this->SortBy(
+                $query,
+                $filters['sort_by'] ?? 'created_at',
+                $filters['sort_direction'] ?? 'desc',
+                $hasDistance
+            );
+
+            $stores = $query->paginate(10);
+            foreach ($stores as $store) {
+                $this->formatListItem($store, $hasDistance);
+            }
+            return $stores;
+        } catch (\Exception $exception) {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                collect(),
+                0,
+                12,
+                1
+            );
+        }
+    }
+
+    private function Filters(array $filters)
+    {
+        $query = Store::query()
+            ->with(['category', 'province', 'district', 'ward', 'reviews'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->whereIn('status', [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value]);
+
+        if (!empty($filters['status']) && in_array($filters['status'], [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (($filters['opening_now'] ?? 'all') === 'open') {
+            $currentTime = Carbon::now()->format('H:i:s');
+            $query->whereTime('opening_time', '<=', $currentTime)
+                  ->whereTime('closing_time', '>=', $currentTime);
+        }
+
+        if (!empty($filters['category_id'])) {
+            $query->whereIn('category_id', $filters['category_id']);
+        }
+
+        if (!empty($filters['utility_id'])) {
+            $query->whereHas('utilities', function ($q) use ($filters) {
+                $q->whereIn('utility_id', $filters['utility_id']);
+            });
+        }
+
+        if (!empty($filters['province_code'])) {
+            $query->where('province_code', $filters['province_code']);
+        }
+        if (!empty($filters['district_code'])) {
+            $query->where('district_code', $filters['district_code']);
+        }
+        if (!empty($filters['ward_code'])) {
+            $query->where('ward_code', $filters['ward_code']);
+        }
+
+        return $query;
+    }
+
+    private function DistanceSelect($query, ?float $lat, ?float $lng): bool
+    {
+        if ($lat && $lng) {
+            $query->addSelect('stores.*')->selectRaw(
+                '(6371 * acos( cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)) )) as distance_km',
+                [$lat, $lng, $lat]
+            );
+            return true;
+        }
+        return false;
+    }
+
+    private function SortBy($query, string $sortBy, string $direction, bool $hasDistance): void
+    {
+        switch ($sortBy) {
+            case 'name':
+                $query->orderBy('name', $direction);
+                break;
+            case 'rating':
+                $query->orderBy('reviews_avg_rating', 'desc')
+                    ->orderBy('reviews_count', 'desc');
+                break;
+            case 'distance':
+                if ($hasDistance) {
+                    $query->whereNotNull('latitude')->whereNotNull('longitude');
+                    $query->orderBy('distance_km', 'asc');
+                } else {
+                    $query->orderBy('created_at', 'desc');
+                }
+                break;
+            case 'created_at':
+            default:
+                $query->orderBy('created_at', $direction);
+                break;
+        }
+    }
+
+    private function formatListItem($store, bool $hasDistance): void
+    {
+        $store->image_url = HelperFunction::generateURLImagePath($store->logo_path ?? ($store->logo ?? null));
+        if ($hasDistance && isset($store->distance_km)) {
+            $store->distance_km = round((float) $store->distance_km, 1);
+        }
+        $store->status_label = $this->getStoreStatusLabel($store);
+    }
+
+    private function getStoreStatusLabel($store): string
+    {
+        $now = Carbon::now();
+        $openingTime = Carbon::createFromFormat('H:i', $store->opening_time);
+        $closingTime = Carbon::createFromFormat('H:i', $store->closing_time);
+
+        if ($now->between($openingTime, $closingTime)) {
+            return 'Đang mở cửa';
+        } else {
+            return 'Đã đóng cửa';
+        }
+    }
 }
