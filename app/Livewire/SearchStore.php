@@ -44,9 +44,7 @@ class SearchStore extends Component
         $this->categoryService = $categoryService;
         $this->provinceService = $provinceService;
         $this->utilityService = $utilityService;
-        $this->loadCategories();
-        $this->loadProvinces();
-        $this->loadUtilities();
+        $this->loadFilterOptions();
     }
 
     public function render()
@@ -69,20 +67,14 @@ class SearchStore extends Component
         ]);
     }
     
-    private function loadCategories(): void
+    private function loadFilterOptions(): void
     {
         $categoryList = $this->categoryService->getAllCategoryForHomePage();
         $this->categories = $categoryList ? $categoryList->pluck('name', 'id')->toArray() : [];
-    }
 
-    private function loadProvinces(): void
-    {
         $provinces = $this->provinceService->getProvinces();
         $this->provinces = $provinces ? $provinces->pluck('name', 'code')->toArray() : [];
-    }
 
-    private function loadUtilities(): void
-    {
         $utilities = $this->utilityService->getUtilitiesForSelect();
         $this->utilities = $utilities ?: [];
     }
@@ -107,110 +99,79 @@ class SearchStore extends Component
         }
     }
 
-    public function updateStatus()
+    public function updated($name): void
     {
-        $this->resetPage();
+        $keysToReset = [
+            'openingNow',
+            'selectedCategories',
+            'selectedProvince',
+            'selectedDistrict',
+            'selectedWard',
+            'selectedUtilities',
+            'status',
+            'sortBy',
+        ];
+
+        if (in_array($name, $keysToReset, true)) {
+            if ($name === 'selectedProvince') {
+                $this->selectedDistrict = null;
+                $this->selectedWard     = null;
+                $this->wards            = [];
+                $this->loadDistricts();
+            }
+            if ($name === 'selectedDistrict') {
+                $this->selectedWard = null;
+                $this->loadWards();
+            }
+            $this->resetPage();
+        }
     }
 
-    public function updatedOpeningNow(): void
+    public function clearFilter(string $key, $id = null): void
     {
-        $this->resetPage();
-    }
-
-    public function updatedSelectedCategories(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedSelectedProvince(): void
-    {
-        $this->selectedDistrict = null;
-        $this->selectedWard     = null;
-        $this->wards            = [];
-    
-        $this->loadDistricts();
-        $this->resetPage();
-    }
-    
-    public function updatedSelectedDistrict(): void
-    {
-        $this->selectedWard = null;
-        
-        $this->loadWards();
-        $this->resetPage();
-    }
-
-    public function updatedSelectedWard(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedSelectedUtilities(): void
-    {
-        $this->resetPage();
-    }
-
-    public function clearAllFilters(): void
-    {
-        $this->status = null;
-        $this->openingNow = 'all';
-        $this->selectedCategories = [];
-        $this->selectedProvince = null;
-        $this->selectedDistrict = null;
-        $this->selectedWard = null;
-        $this->selectedUtilities = [];
-
-        $this->districts = [];
-        $this->wards = [];
-
-        $this->resetPage();
-    }
-
-    public function removeCategory(int $categoryId): void
-    {
-        $this->selectedCategories = array_values(array_filter(
-            $this->selectedCategories,
-            fn ($id) => (int) $id !== (int) $categoryId
-        ));
-        $this->resetPage();
-    }
-
-    public function removeUtility(int $utilityId): void
-    {
-        $this->selectedUtilities = array_values(array_filter(
-            $this->selectedUtilities,
-            fn ($id) => (int) $id !== (int) $utilityId
-        ));
-        $this->resetPage();
-    }
-
-    public function clearOpeningNow(): void
-    {
-        $this->openingNow = 'all';
-        $this->resetPage();
-    }
-
-    public function clearProvince(): void
-    {
-        $this->selectedProvince = null;
-        $this->selectedDistrict = null;
-        $this->selectedWard = null;
-        $this->districts = [];
-        $this->wards = [];
-        $this->resetPage();
-    }
-
-    public function clearDistrict(): void
-    {
-        $this->selectedDistrict = null;
-        $this->selectedWard = null;
-        $this->wards = [];
-        $this->resetPage();
-    }
-
-    public function clearWard(): void
-    {
-        $this->selectedWard = null;
+        switch ($key) {
+            case 'all':
+                $this->status = null;
+                $this->openingNow = 'all';
+                $this->selectedCategories = [];
+                $this->selectedProvince = null;
+                $this->selectedDistrict = null;
+                $this->selectedWard = null;
+                $this->selectedUtilities = [];
+                $this->districts = [];
+                $this->wards = [];
+                break;
+            case 'openingNow':
+                $this->openingNow = 'all';
+                break;
+            case 'category':
+                $this->selectedCategories = array_values(array_filter(
+                    $this->selectedCategories ?? [],
+                    fn ($cid) => (int) $cid !== (int) $id
+                ));
+                break;
+            case 'utility':
+                $this->selectedUtilities = array_values(array_filter(
+                    $this->selectedUtilities ?? [],
+                    fn ($uid) => (int) $uid !== (int) $id
+                ));
+                break;
+            case 'province':
+                $this->selectedProvince = null;
+                $this->selectedDistrict = null;
+                $this->selectedWard = null;
+                $this->districts = [];
+                $this->wards = [];
+                break;
+            case 'district':
+                $this->selectedDistrict = null;
+                $this->selectedWard = null;
+                $this->wards = [];
+                break;
+            case 'ward':
+                $this->selectedWard = null;
+                break;
+        }
         $this->resetPage();
     }
 }
