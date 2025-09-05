@@ -25,8 +25,10 @@ class StoreService
 
             if ($filters['opening_now'] === 'Đang mở cửa') {
                 $now = Carbon::now();
-                $query->whereTime('opening_time', '<=', $now)
-                      ->whereTime('closing_time', '>=', $now);
+                $currentTime = $now->format('H:i:s');
+                
+                $query->whereTime('opening_time', '<=', $currentTime)
+                      ->whereTime('closing_time', '>=', $currentTime);
             }
 
             $sortBy = $filters['sort_by'] ?? 'created_at';

@@ -16,7 +16,7 @@
             @if($type === 'radio')
                 @foreach (array_slice($options, 0, 7) as $option)
                     <label class="flex cursor-pointer justify-start gap-3 mb-2.5">
-                        <input type="radio" name="{{ $model ?? $name }}" class="radio checked:text-[#52ab5c]" wire:model="{{ $model }}" value="{{ ltrim($option, '!') }}"/>
+                        <input type="radio" name="{{ $model ?? $name }}" class="radio checked:text-[#52ab5c]" wire:model.live="{{ $model }}" value="{{ ltrim($option, '!') }}"/>
                         <span class="label-text">{{ ltrim($option, '!') }}</span>
                     </label>
                 @endforeach

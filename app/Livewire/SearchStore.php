@@ -42,9 +42,8 @@ class SearchStore extends Component
         $this->resetPage();
     }
 
-    public function updateOpeningNow($openingNow)
+    public function updatedOpeningNow(): void
     {
-        $this->openingNow = $openingNow;
         $this->resetPage();
     }
 }
