@@ -6,11 +6,10 @@ use App\Services\StoreService;
 use App\Services\CategoryService;
 use App\Services\ProvinceService;
 use App\Services\UtilityService;
-use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
-
-class SearchStore extends Component
+use Livewire\Attributes\Url;
+class SearchStore extends BaseComponent
 {
     use WithPagination;
 
@@ -22,6 +21,7 @@ class SearchStore extends Component
      * ---- State ----
      */
 
+    public $filters = [];
     public $status = null;
     public $openingNow = 'all';
     public $categories = [];
@@ -40,11 +40,17 @@ class SearchStore extends Component
 
     public function boot(StoreService $storeService, CategoryService $categoryService, ProvinceService $provinceService, UtilityService $utilityService): void
     {
+        parent::setupBase();
         $this->storeService = $storeService;
         $this->categoryService = $categoryService;
         $this->provinceService = $provinceService;
         $this->utilityService = $utilityService;
         $this->loadFilterOptions();
+    }
+
+    public function mount()
+    {
+
     }
 
     public function render()
@@ -61,12 +67,12 @@ class SearchStore extends Component
             'user_lat' => $this->userLat,
             'user_lng' => $this->userLng,
         ]);
-        
-        return view('livewire.searchStore.search-store', [
+
+        return $this->view('livewire.search-store', [
             'stores' => $stores,
         ]);
     }
-    
+
     private function loadFilterOptions(): void
     {
         $categoryList = $this->categoryService->getAllCategoryForHomePage();
