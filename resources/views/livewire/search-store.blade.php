@@ -1,4 +1,6 @@
-<div class="mx-auto w-full max-w-[1200px] sm:px-4 sm:py-6" x-data="{ mobileFilterOpen: false }" x-init="window.addEventListener('geolocation-updated', (e) => {
+<div class="mx-auto w-full max-w-[1200px] sm:px-4 sm:py-6"
+     x-data="{ mobileFilterOpen: false }"
+     x-init="window.addEventListener('geolocation-updated', (e) => {
     $wire.set('userLat', e.detail.lat);
     $wire.set('userLng', e.detail.lng);
 });
@@ -41,7 +43,7 @@ if (window.GeoPlugin?.state.user.lat && window.GeoPlugin?.state.user.lng) {
                     @if ($hasAnyFilter)
                         <button wire:click="clearFilter('all')" class="text-sm underline text-gray-600 hover:text-red-600">Xóa tất cả bộ lọc</button>
                     @endif
-                    <div>    
+                    <div>
                         @if ($openingNow !== 'all')
                             <span class="badge badge-outline border-green-500 text-green-700 gap-1 h-8">
                                 Đang mở cửa
@@ -91,10 +93,10 @@ if (window.GeoPlugin?.state.user.lat && window.GeoPlugin?.state.user.lng) {
             </div>
             @foreach ($stores ?? [] as $store)
                 <div wire:key="store-{{ $store->id }}">
-                <x-card-product 
-                    :image="$store->image_url" 
-                    :title="$store->name" 
-                    :description="$store->short_description ?? $store->description" 
+                <x-card-product
+                    :image="$store->image_url"
+                    :title="$store->name"
+                    :description="$store->short_description ?? $store->description"
                     :overall_rating="(float) ($store->overall_rating ?? 0)"
                     :reviews_count="$store->reviews_count"
                     :address="$store->address"
