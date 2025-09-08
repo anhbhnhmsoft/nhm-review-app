@@ -37,7 +37,6 @@ new Swiper('#store_utilities', {
     spaceBetween: 30,
     speed: 500,
     breakpoints: {
-        // màn hình <= 1024px (lg trở xuống)
         1024: {
             slidesPerView: 5,
         },

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', \App\Livewire\Dashboard::class)->name('dashboard');
-Route::get('/search-store', \App\Livewire\SearchStore::class)->name('search-store');
 
 Route::get('/image/{file_path}', [FileController::class, 'image'])
     ->where('file_path', '.*')
@@ -16,7 +15,11 @@ Route::get('/video/{file_path}', [FileController::class, 'video'])
     ->name('public_video');
 
 
+
+Route::get('/dang-nhap',\App\Livewire\Login::class)->name('frontend.login');
+Route::get('/dang-ky',\App\Livewire\Register::class)->name('frontend.register');
 Route::get('/dia-diem/{slug}', \App\Livewire\Store::class)->name('frontend.store');
+Route::get('/tim-kiem', \App\Livewire\SearchStore::class)->name('frontend.search-store');
 
 
 Route::prefix('common')->group(function () {

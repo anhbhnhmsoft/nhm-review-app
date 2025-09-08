@@ -19,7 +19,7 @@ new Swiper('#banner__header', {
 
 new Swiper('#banner__ads', {
     // Bật Auto Scroll
-    slidesPerView: 3,
+    slidesPerView: 1,
     spaceBetween: 30,
     autoplay: {
         delay: 3000, // Thời gian delay giữa mỗi slide (3 giây)
@@ -35,18 +35,36 @@ new Swiper('#banner__ads', {
     },
     loop: true, // Lặp lại các slide
     speed: 500,
+    breakpoints: {
+        1024: {
+            slidesPerView: 3,
+        },
+    },
 });
+
 
 new Swiper('.store__category', {
     // Bật Auto Scroll
-    slidesPerView: 4,
+    slidesPerView: 1,
     spaceBetween: 30,
     navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
     },
-    loop: true, // Lặp lại các slide
     speed: 500,
+    breakpoints: {
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 16
+        },
+        1024: {
+            slidesPerView: 4,
+        },
+    }
 });
+
+window.Swiper = Swiper;
+
+
 
 

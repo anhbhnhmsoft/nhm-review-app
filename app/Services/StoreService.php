@@ -3,23 +3,25 @@
 namespace App\Services;
 
 use App\Models\Store;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Utils\Constants\StoreStatus;
 use App\Utils\HelperFunction;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 class StoreService
 {
     protected function queryStoreItem()
     {
         return Store::query()->with([
-                'storeFiles'=> function ($query) {
-                    $query->limit(4);
-                },
-                'utilities',
-                'reviews',
-            ])
-            ->withCount(['storeFiles','reviews'])
+            'storeFiles' => function ($query) {
+                $query->limit(4);
+            },
+            'utilities',
+            'reviews',
+        ])
+            ->withCount(['storeFiles', 'reviews'])
             ->canShow();
     }
 
@@ -36,12 +38,11 @@ class StoreService
                 $q->select(DB::raw('avg((rating_location + rating_space + rating_quality + rating_serve) / 4)'));
             },])
             ->limit(5)->get();
-
     }
 
     public function getStoreById($id)
     {
-        return $this->queryStoreItem()->where('id',$id)->first();
+        return $this->queryStoreItem()->where('id', $id)->first();
     }
 
     public function getAverageRating(Store $store)
@@ -61,11 +62,11 @@ class StoreService
         $ratings = $this->getAverageRating($store);
         if ($ratings) {
             $totalAverage = (
-                    $ratings->avg_location +
-                    $ratings->avg_space +
-                    $ratings->avg_quality +
-                    $ratings->avg_serve
-                ) / 4;
+                $ratings->avg_location +
+                $ratings->avg_space +
+                $ratings->avg_quality +
+                $ratings->avg_serve
+            ) / 4;
             return round($totalAverage, 1);
         }
         return 0;
@@ -74,13 +75,13 @@ class StoreService
     public function searchStores(array $filters = []): LengthAwarePaginator
     {
         try {
-            $query = $this->Filters($filters);
+            $query = $this->filters($filters);
 
             $lat = $filters['user_lat'] ?? null;
             $lng = $filters['user_lng'] ?? null;
-            $hasDistance = $this->DistanceSelect($query, $lat, $lng);
+            $hasDistance = $this->distanceSelect($query, $lat, $lng);
 
-            $this->SortBy(
+            $query = $this->sortBy(
                 $query,
                 $filters['sort_by'] ?? 'created_at',
                 $filters['sort_direction'] ?? 'desc',
@@ -90,6 +91,8 @@ class StoreService
             $stores = $query->paginate(10);
             foreach ($stores as $store) {
                 $this->formatListItem($store, $hasDistance);
+                $averageRating = $this->getOverallAverageRating($store);
+                $store->overall_rating = $averageRating;
             }
             return $stores;
         } catch (\Exception $exception) {
@@ -102,13 +105,24 @@ class StoreService
         }
     }
 
-    private function Filters(array $filters)
+    public function filters(array $filters)
     {
         $query = Store::query()
             ->with(['category', 'province', 'district', 'ward', 'reviews'])
-            ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
+            ->withCount(['reviews', 'reviews as reviews_avg' => function ($q) {
+                $q->select(DB::raw('avg((rating_location + rating_space + rating_quality + rating_serve) / 4)'));
+            }])
             ->whereIn('status', [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value]);
+
+
+
+        if (!empty($filters['id'])){
+            $query->where('id', $filters['id']);
+        }
+
+        if (!empty($filters['featured'])){
+            $query->where('featured', $filters['featured']);
+        }
 
         if (!empty($filters['status']) && in_array($filters['status'], [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value])) {
             $query->where('status', $filters['status']);
@@ -117,11 +131,15 @@ class StoreService
         if (($filters['opening_now'] ?? 'all') === 'open') {
             $currentTime = Carbon::now()->format('H:i:s');
             $query->whereTime('opening_time', '<=', $currentTime)
-                  ->whereTime('closing_time', '>=', $currentTime);
+                ->whereTime('closing_time', '>=', $currentTime);
         }
 
         if (!empty($filters['category_id'])) {
-            $query->whereIn('category_id', $filters['category_id']);
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        if (!empty($filters['category_ids'])) {
+            $query->whereIn('category_id', $filters['category_ids']);
         }
 
         if (!empty($filters['utility_id'])) {
@@ -133,9 +151,11 @@ class StoreService
         if (!empty($filters['province_code'])) {
             $query->where('province_code', $filters['province_code']);
         }
+
         if (!empty($filters['district_code'])) {
             $query->where('district_code', $filters['district_code']);
         }
+
         if (!empty($filters['ward_code'])) {
             $query->where('ward_code', $filters['ward_code']);
         }
@@ -143,7 +163,7 @@ class StoreService
         return $query;
     }
 
-    private function DistanceSelect($query, ?float $lat, ?float $lng): bool
+    private function distanceSelect($query, ?float $lat, ?float $lng): bool
     {
         if ($lat && $lng) {
             $query->addSelect('stores.*')->selectRaw(
@@ -155,22 +175,23 @@ class StoreService
         return false;
     }
 
-    private function SortBy($query, string $sortBy, string $direction, bool $hasDistance): void
+    public function sortBy(Builder $query, string $sortBy, string $direction = 'desc', bool $hasDistance = false)
     {
         switch ($sortBy) {
             case 'name':
                 $query->orderBy('name', $direction);
                 break;
             case 'rating':
-                $query->orderBy('reviews_avg_rating', 'desc')
+                $query->orderBy('reviews_avg', 'desc')
                     ->orderBy('reviews_count', 'desc');
+                break;
+            case 'view':
+                $query->orderBy('view', 'desc');
                 break;
             case 'distance':
                 if ($hasDistance) {
                     $query->whereNotNull('latitude')->whereNotNull('longitude');
                     $query->orderBy('distance_km', 'asc');
-                } else {
-                    $query->orderBy('created_at', 'desc');
                 }
                 break;
             case 'created_at':
@@ -178,13 +199,14 @@ class StoreService
                 $query->orderBy('created_at', $direction);
                 break;
         }
+        return $query;
     }
 
     private function formatListItem($store, bool $hasDistance): void
     {
-        $store->image_url = HelperFunction::generateURLImagePath($store->logo_path ?? ($store->logo ?? null));
+        $store->image_url = route('public_image', ['file_path' => $store->logo_path ?? ($store->logo ?? null)]);
         if ($hasDistance && isset($store->distance_km)) {
-            $store->distance_km = round((float) $store->distance_km, 1);
+            $store->distance_km = round((float)$store->distance_km, 1);
         }
         $store->status_label = $this->getStoreStatusLabel($store);
     }

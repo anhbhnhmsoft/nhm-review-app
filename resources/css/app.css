@@ -2,7 +2,7 @@
 @plugin "daisyui" {
     themes: nord --default;
 }
-
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -17,6 +17,16 @@
 }
 .section {
     @apply px-[280px] py-[60px] relative
+}
+
+.d_section{
+    @apply flex items-center justify-center flex-col
+}
+.container {
+    @apply w-full px-4 md:px-0 lg:m-auto xl:w-[80rem] lg:w-[64rem] relative;
+}
+.pad_container{
+    @apply py-12 lg:py-16
 }
 
 .section_inside {
@@ -54,6 +64,12 @@
 .swiper-button-next::after,
 .swiper-button-prev::after {
     content: '' !important; /* Xóa icon mặc định */
+}
+.swiper-button-prev{
+    @apply !w-[40px] !h-[40px] bg-white border rounded-full !border-gray-600 left-0 lg:!left-[-23px] shadow-md
+}
+.swiper-button-next{
+    @apply !w-[40px] !h-[40px] bg-white border rounded-full !border-gray-600 right-0 lg:!right-[-23px] shadow-md
 }
 .swiper-pagination-bullet-active{
     @apply !bg-gray-600;
