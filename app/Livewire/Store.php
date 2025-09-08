@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class Store extends Component
+class Store extends BaseComponent
 {
 
     private StoreService $storeService;
@@ -24,6 +24,7 @@ class Store extends Component
 
     public function boot(StoreService $storeService)
     {
+        parent::setupBase();
         $this->storeService = $storeService;
     }
     #[On('reload-parent')]
@@ -52,6 +53,6 @@ class Store extends Component
 
     public function render()
     {
-        return view('livewire.store');
+        return $this->view('livewire.store');
     }
 }
