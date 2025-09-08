@@ -8,6 +8,17 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CategoryService
 {
+    public function query(array $params = [])
+    {
+        $query = Category::query();
+
+        if (!empty($params['parent_id'])) {
+            $query->where('parent_id', $params['parent_id']);
+        }
+
+        return $query;
+
+    }
     public function getAllCategoryForHomePage(): ?Collection
     {
         try {
@@ -21,4 +32,6 @@ class CategoryService
             return null;
         }
     }
+
+
 }

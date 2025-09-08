@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/dashboard.js',
                 'resources/js/map.js',
+                'resources/js/store.js',
                 'resources/css/map.css',
             ],
             refresh: true,

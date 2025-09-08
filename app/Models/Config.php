@@ -8,6 +8,7 @@ class Config extends Model
 {
     protected $fillable = [
         'config_key',
+        'config_type',
         'config_value',
         'description',
     ];

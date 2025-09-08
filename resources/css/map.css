@@ -1,19 +1,127 @@
-#map-place-autocomplete-card {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.10) 0px 5px 15px;
-    margin: 10px;
-    padding: 5px;
+:root {
+    --building-color: #FF9800;
+    --house-color: #0288D1;
+    --shop-color: #7B1FA2;
+    --warehouse-color: #558B2F;
 }
 
-gmp-place-autocomplete {
-    width: 300px;
+/*
+ * Property styles in unhighlighted state.
+ */
+.property {
+    align-items: center;
+    background-color: var(--warehouse-color);
+    border-radius: 50%;
+    color: #263238;
+    display: flex;
+    font-size: 14px;
+    gap: 15px;
+    height: 40px;
+    width: 40px;
+    justify-content: center;
+    padding: 4px;
+    position: relative;
+    transition: all 0.3s ease-out;
+    transform: translateY(-9px);
 }
 
-#infowindow-content .title {
-    font-weight: bold;
+.property::after {
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid var(--warehouse-color);
+    content: "";
+    height: 0;
+    left: 50%;
+    position: absolute;
+    top: 95%;
+    transform: translate(-50%, 0);
+    transition: all 0.3s ease-out;
+    width: 0;
+    z-index: 1;
+}
+.property .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
 }
 
-#map #infowindow-content {
-    display: inline;
+.property .icon svg {
+    height: 20px;
+    color: #FFFFFF;
+    width: auto;
 }
+.property .image-holder {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.property .image-holder > img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+}
+
+.property .details {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+}
+
+.property .details .name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.property .details .address {
+    color: #9E9E9E;
+    font-size: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.property .rating-location {
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+    gap: 4px;
+}
+
+.property .rating-location span {
+    font-size: 10px;
+}
+.property .rating-location .rating-location-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #16a34a;
+}
+
+.property.highlight {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+    height: fit-content;
+    padding: 8px 15px;
+    width: auto;
+}
+
+.property.highlight::after {
+    border-top: 9px solid #FFFFFF;
+}
+
+.property.highlight .details {
+    display: flex;
+}
+
+.property.highlight .icon {
+    display: none;
+}
+.property.highlight .image-holder{
+    display: flex;
+}
+
+

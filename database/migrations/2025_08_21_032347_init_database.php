@@ -114,9 +114,8 @@ return new class extends Migration
             $table->foreign('district_code')->references('code')->on('districts')->cascadeOnDelete();
             $table->foreign('ward_code')->references('code')->on('wards')->cascadeOnDelete();
             $table->string('address')->comment('Địa chỉ cụ thể');
-            $table->string('latitude')->nullable()->comment('Vĩ độ');
-            $table->string('longitude')->nullable()->comment('Kinh độ');
-            $table->string('google_map_place_id')->nullable();
+            $table->decimal('latitude', 10, 6)->comment('Vĩ độ');
+            $table->decimal('longitude', 10, 6)->comment('Kinh độ');
 
             // Thông tin liên hệ
             $table->string('logo_path')->comment('Logo của cửa hàng');
@@ -184,7 +183,10 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onDelete('cascade');
-            $table->tinyInteger('rating')->comment('Đánh giá của người dùng, từ 1 đến 5');
+            $table->tinyInteger('rating_location')->default(5)->comment('Đánh giá vị trí');
+            $table->tinyInteger('rating_space')->default(5)->comment('Đánh giá không gian');
+            $table->tinyInteger('rating_quality')->default(5)->comment('Đánh giá chất lượng');
+            $table->tinyInteger('rating_serve')->default(5)->comment('Đánh giá phục vụ');
             $table->text('review')->nullable()->comment('Nội dung đánh giá của người dùng');
             $table->boolean('is_anonymous')->default(false)->comment('Đánh dấu xem đánh giá có ẩn danh hay không');
             $table->timestamps();
@@ -246,6 +248,7 @@ return new class extends Migration
             $table->id();
             $table->comment('Bảng configs lưu trữ các cấu hình của hệ thống');
             $table->string('config_key')->unique();
+            $table->smallInteger('config_type')->nullable()->comment('Loại cấu hình 1: Type image, 2: Type string');
             $table->text('config_value');
             $table->text('description')->nullable();
             $table->timestamps();

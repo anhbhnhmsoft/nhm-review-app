@@ -17,9 +17,12 @@ class Review extends Model
         'id',
         'store_id',
         'user_id',
-        'rating',
         'review',
-        'is_anonymous'
+        'is_anonymous',
+        'rating_location',
+        'rating_space',
+        'rating_quality',
+        'rating_serve',
     ];
 
     protected function casts(): array

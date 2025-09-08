@@ -15,7 +15,7 @@ enum CategoryStatus:int
         ];
     }
 
-        public function getLabel(CategoryStatus $state): string
+        public function getLabel(CategoryStatus $state): array
     {
             return self::getOptions()[$state->value];
     }

@@ -8,6 +8,8 @@ enum StoragePath:string
     case CATEGORY_PATH = "category_images";
     case STORE_PATH = "stores";
     case ARTICLE_PATH = "articles";
+    case REVIEW_PATH = "review_images";
+    case CONFIG_PATH = "config_images";
 
 
     public static function makePath(StoragePath $type, string $filename): string

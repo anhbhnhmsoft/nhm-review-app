@@ -1,34 +1,142 @@
-<header class="h-[116px] bg-white px-[303px] pt-[25px] pb-[22px] flex justify-between items-center">
-    <div class="logo">
-        <a href="{{ route('dashboard') }}">
-            <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-[69px] w-[150px] object-contain">
-        </a>
-    </div>
-    <div class="flex items-center gap-4">
-        <div class="inline-flex items-center gap-4">
-            {{-- Tìm xung quanh --}}
-            <a href="#" class="inline-flex items-end gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 text-blue-500">
-                    <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
-                </svg>
-                <span class="uppercase font-bold text-base">Tìm xung quanh</span>
-            </a>
+@php use App\Utils\Constants\ConfigName; @endphp
+<div>
+    <header class="bg-white d_section">
+        <div class="container flex py-4 lg:py-6 justify-between items-center">
+            <div class="logo">
+                <a href="{{ route('dashboard') }}">
+                    @if(isset($configs[ConfigName::LOGO->value]))
+                        <img src="{{ $configs[ConfigName::LOGO->value] }}" alt="Logo" class="h-12 w-full object-contain">
+                    @else
+                        <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-16 w-full object-contain">
+                    @endif
+                </a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <div class="inline-flex items-center gap-4">
+                    {{-- Tìm xung quanh --}}
+                    <a href="#" class="inline-flex items-center gap-2 group">
+                        <i class="fa-solid fa-location-dot text-blue-500 text-xl group-hover:animate-bounce"></i>
+                        <span class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-blue-500">Tìm xung quanh</span>
+                    </a>
+                    {{-- Thông báo --}}
+                    <a href="#" class="inline-flex items-center gap-2 group">
+                        <i class="fa-solid fa-bell text-red-500 text-xl group-hover:animate-bounce"></i>
+                        <span class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-red-500">Thông báo</span>
+                    </a>
+                </div>
+                <div class="inline-flex items-center gap-2">
+                    <a href="#" class="btn btn-primary-green text-white text-base font-medium rounded-lg">
+                        Viết Review
+                    </a>
+                    @if(auth('web')->check())
+                        <a href="#" class="btn btn-primary-blue text-white text-base font-medium rounded-lg">
+                            hehe
+                        </a>
+                    @else
+                        <a href="{{route('frontend.login')}}"
+                           class="btn btn-primary-blue text-white text-base font-medium rounded-lg">
+                            Đăng nhập
+                        </a>
+                    @endif
 
-            {{-- Thông báo --}}
-            <a href="#" class="inline-flex items-end gap-2">
-                <svg width="35" height="43" viewBox="0 0 35 43"  fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="size-8 text-red-500">
-                    <path d="M17.5039 0C16.1208 0 15.0033 1.17972 15.0033 2.63994V2.90393C9.29895 4.12491 5.00112 9.45428 5.00112 15.8396V17.6299C5.00112 21.598 3.71958 25.4507 1.37531 28.5526L0.609511 29.5591C0.210985 30.0788 0 30.7223 0 31.3905C0 33.0075 1.24246 34.3192 2.77406 34.3192H32.2259C33.7575 34.3192 35 33.0075 35 31.3905C35 30.7223 34.789 30.0788 34.3905 29.5591L33.6247 28.5526C31.2882 25.4507 30.0067 21.598 30.0067 17.6299V15.8396C30.0067 9.45428 25.7089 4.12491 20.0045 2.90393V2.63994C20.0045 1.17972 18.887 0 17.5039 0ZM12.6591 38.2791C13.2139 40.5561 15.1753 42.239 17.5039 42.239C19.8326 42.239 21.7939 40.5561 22.3487 38.2791H12.6591Z"/>
-                </svg>
-                <span class="uppercase font-bold text-base">Thông báo</span>
-            </a>
+                </div>
+            </div>
+            {{-- mobile--}}
+            <div class="block lg:hidden">
+                <div x-data="{open: false}">
+                    <button
+                        @click="open = true"
+                        class="px-3 py-2 bg-transparent text-green-600"
+                    >
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                    <!-- Overlay -->
+                    <div
+                        x-show="open"
+                        x-transition.opacity
+                        class="fixed inset-0 z-40 bg-black/50"
+                        @click="open = false"
+                    ></div>
+
+                    <!-- Panel -->
+                    <aside
+                        x-show="open"
+                        x-transition:enter="transform transition ease-out duration-300"
+                        x-transition:enter-start="translate-x-full"
+                        x-transition:enter-end="translate-x-0"
+                        x-transition:leave="transform transition ease-in duration-200"
+                        x-transition:leave-start="translate-x-0"
+                        x-transition:leave-end="translate-x-full"
+                        class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-xl"
+                        @click.outside="open = false"
+                    >
+                        <!-- Header -->
+                        <div class="flex items-center justify-between px-4 py-3 border-b">
+                            <a href="{{ route('frontend.login') }}" class="btn btn-primary-green">
+                                Đăng nhập
+                            </a>
+                            <button
+                                @click="open = false"
+                                class="inline-flex items-center justify-center rounded-full border p-2 hover:bg-gray-100"
+                                aria-label="Đóng"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Nội dung scroll được -->
+                        <div class="h-[calc(100vh-57px)] overflow-y-auto p-4">
+                            <nav class="flex flex-col gap-4 py-4">
+                                <a href="#" class="text-base font-bold ">
+                                    Mới nhất
+                                </a>
+                                <a href="#" class="text-base font-bold ">
+                                    Địa điểm uy tín
+                                </a>
+                                <a href="#" class="text-base font-bold ">
+                                    Khuyến mãi hot
+                                </a>
+                                <a href="#" class="text-base font-bold ">
+                                    Video
+                                </a>
+                                <a href="#" class="text-base font-bold ">
+                                    Cẩm nang
+                                </a>
+                                <a href="#" class="text-base font-bold ">
+                                    Tin tức
+                                </a>
+                            </nav>
+                        </div>
+                    </aside>
+                </div>
+
+            </div>
         </div>
-        <div class="inline-flex items-center gap-2">
-            <a href="#" class="btn bg-green-600 hover:bg-green-400 border-0 text-white text-base font-medium rounded-lg">
-                Viết Review
+    </header>
+
+    <div class="hidden lg:flex items-center justify-center bg-green-500">
+        <nav class="container !flex items-center justify-between gap-4 py-4">
+            <a href="#" class="text-base font-bold text-white">
+                Mới nhất
             </a>
-            <a href="#" class="btn bg-blue-600 hover:bg-blue-400 border-0 text-white text-base font-medium rounded-lg">
-                Đăng nhập
+            <a href="#" class="text-base font-bold text-white">
+                Địa điểm uy tín
             </a>
-        </div>
+            <a href="#" class="text-base font-bold text-white">
+                Khuyến mãi hot
+            </a>
+            <a href="#" class="text-base font-bold text-white">
+                Video
+            </a>
+            <a href="#" class="text-base font-bold text-white">
+                Cẩm nang
+            </a>
+            <a href="#" class="text-base font-bold text-white">
+                Tin tức
+            </a>
+        </nav>
     </div>
-</header>
+
+</div>

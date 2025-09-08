@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @livewireStyles
         @include('layouts.head')
     </head>
-    <body class="">
-        @include('layouts.header')
+    <body class="bg-white">
+        @if(!(isset($hideLayout) && $hideLayout === true))
+            @include('layouts.header')
+        @endif
         <div class="w-full">
             {{ $slot }}
         </div>
-        @include('layouts.footer')
+        @if(!(isset($hideLayout) && $hideLayout === true))
+            @include('layouts.footer')
+        @endif
         <div x-data="{ showButton: false }" x-init="window.addEventListener('scroll', () => { showButton = window.scrollY > 500 })">
             <!-- Nút Scroll to Top -->
             <button x-show="showButton"
@@ -22,5 +27,6 @@
                 </svg>
             </button>
         </div>
+        @livewireScriptConfig
     </body>
 </html>
