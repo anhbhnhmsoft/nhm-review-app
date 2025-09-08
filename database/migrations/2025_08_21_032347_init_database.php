@@ -272,6 +272,18 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::create('page_statics', function (Blueprint $table) {
+            $table->id();
+            $table->string('title')->comment('Tiêu đề trang');
+            $table->string('slug')->unique()->comment('Slug trang');
+            $table->text('content')->comment('Nội dung trang');
+            $table->text('excerpt')->comment('Miên tả ngắn');
+            $table->string('image_path')->nullable()->comment('Đường dẫn đến hình ảnh đại diện');
+            $table->tinyInteger('status')->comment('Trạng thái trang');
+            $table->timestamp('published_at')->comment('Ngày xuất bản trang');
+            $table->timestamps();
+        });
     }
 
     /**
