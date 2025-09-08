@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    const int CACHE_TIME = 60 * 60 * 48; // 2 ngày
+    const CACHE_TIME = 60 * 60 * 48; // 2 ngày
 
     // Hàm chung để xử lý ảnh và video
     protected function serveFile($file_path, $type)

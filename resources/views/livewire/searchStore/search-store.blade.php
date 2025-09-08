@@ -95,7 +95,7 @@ if (window.GeoPlugin?.state.user.lat && window.GeoPlugin?.state.user.lng) {
                     :image="$store->image_url" 
                     :title="$store->name" 
                     :description="$store->short_description ?? $store->description" 
-                    :rating="(float) ($store->reviews_avg_rating ?? 0)"
+                    :overall_rating="(float) ($store->overall_rating ?? 0)"
                     :reviews_count="$store->reviews_count"
                     :address="$store->address"
                     :status="$store->status"
@@ -115,11 +115,11 @@ if (window.GeoPlugin?.state.user.lat && window.GeoPlugin?.state.user.lng) {
     </div>
 
     <div class="fixed bottom-2 left-0 right-0 flex justify-center gap-3 z-40 lg:hidden">
-        <button @click="mobileFilterOpen = true" class="btn btn-outline bg-white shadow-sm border-gray-200 px-4 h-10">
+        <button @click="mobileFilterOpen = true" class="btn btn-outline bg-white shadow-sm border-gray-200 px-4 h-10 rounded-3xl">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h15A1.5 1.5 0 0 1 21 4.5v.026a1.5 1.5 0 0 1-.439 1.06l-6.495 6.495a1.5 1.5 0 0 0-.439 1.06V19.5a1.5 1.5 0 0 1-2.121 1.342l-2.25-1.05A1.5 1.5 0 0 1 8 18.45v-4.309a1.5 1.5 0 0 0-.439-1.06L1.066 5.586A1.5 1.5 0 0 1 .627 4.526V4.5Z"/></svg>
             Bộ lọc
         </button>
-        <a href="#map" class="btn btn-outline bg-white shadow-sm border-gray-200 px-4 h-10">
+        <a href="#map" class="btn btn-outline bg-white shadow-sm border-gray-200 px-4 h-10 rounded-3xl">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3.75a.75.75 0 0 0-.345.083L5.4 5.25 2.345 3.833A.75.75 0 0 0 1.5 4.5v14.25a.75.75 0 0 0 1.155.632L5.4 18.75l3.255 1.632a.75.75 0 0 0 .69 0l3.255-1.632 3.255 1.632a.75.75 0 0 0 1.095-.632V4.5a.75.75 0 0 0-1.095-.667L12.6 5.25 9.345 3.833A.75.75 0 0 0 9 3.75Z"/></svg>
             Bản đồ
         </a>
@@ -148,9 +148,9 @@ if (window.GeoPlugin?.state.user.lat && window.GeoPlugin?.state.user.lng) {
                 </div>
                 <x-select title="Tiện ích" :options="$utilities" type="checkbox" model="selectedUtilities" />
             </div>
-            <div class="p-4 flex items-center gap-3 border-t">
-                <button @click="$wire.clearFilter('all')" class="btn btn-outline flex-1">Đặt lại</button>
-                <button @click="mobileFilterOpen = false" class="btn bg-[#52ab5c] text-white flex-1">Áp dụng</button>
+            <div class="p-4 flex items-center gap-3">
+                <button @click="mobileFilterOpen = false" class="btn bg-[#52ab5c] text-white flex-[5_1_0%]">Áp dụng</button>
+                <button @click="$wire.clearFilter('all')" class="btn btn-outline flex-[2_1_0%]">Đặt lại</button>
             </div>
         </div>
     </div>
