@@ -4,16 +4,14 @@ namespace App\Livewire;
 
 use App\Services\BannerService;
 use App\Services\CategoryService;
+use App\Services\StoreService;
 use Illuminate\Database\Eloquent\Collection;
-use Livewire\Component;
 
- class Dashboard extends Component
+ class Dashboard extends BaseComponent
 {
-
      private BannerService $bannerService;
-
      private CategoryService $categoryService;
-
+     private StoreService $storeService;
 
      /**
       * ---- State ----
@@ -21,13 +19,19 @@ use Livewire\Component;
 
      public ?Collection $banner_index;
      public ?Collection $banners;
-
      public ?Collection $categories;
+     public Collection $storesFeatured;
 
-     public function boot(BannerService $bannerService, CategoryService $categoryService): void
+     public function boot(
+         BannerService $bannerService,
+         CategoryService $categoryService,
+         StoreService $storeService,
+     ): void
     {
+        parent::setupBase();
         $this->bannerService = $bannerService;
         $this->categoryService = $categoryService;
+        $this->storeService = $storeService;
     }
 
     public function mount(): void
@@ -39,10 +43,14 @@ use Livewire\Component;
         // Category
         $this->categories = $this->categoryService->getAllCategoryForHomePage();
 
+        // địa điểm nổi bật
+        $this->storesFeatured = $this->storeService->filters([
+          'featured' => true
+        ])->limit(8)->orderBy('sorting_order','asc')->get();
     }
 
     public function render()
     {
-        return view('livewire.dashboard');
+        return $this->view('livewire.dashboard');
     }
 }
