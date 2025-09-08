@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 
+use App\Utils\Constants\CommonConstant;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 
@@ -67,5 +68,20 @@ final class HelperFunction
     public static function avgRatingReview($location, $space, $quality, $serve): float
     {
         return round((($location + $space + $quality + $serve) / 4),2);
+    }
+
+    public static function checkIsStoreOpen($openingTime, $closingTime): bool
+    {
+        $open = Carbon::createFromFormat('H:i', $openingTime);
+        $closed = Carbon::createFromFormat('H:i', $closingTime);
+        $now = Carbon::now();
+        return $now->between($open, $closed);
+    }
+
+    public static function checkIsNewStore($createdAt)
+    {
+        $createdAtCheck = Carbon::createFromFormat('Y-m-d H:i:s', $createdAt);
+        $timeCheck = Carbon::now()->addDays(CommonConstant::STORE_NEW_DAYS);
+        return $timeCheck > $createdAtCheck;
     }
 }

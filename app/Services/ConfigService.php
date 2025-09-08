@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Models\Config;
-use Illuminate\Database\Eloquent\Collection;
+use App\Utils\Constants\ConfigName;
 use Illuminate\Support\Facades\DB;
 
 class ConfigService
 {
-    public function getAllConfig(): ?Collection
+    public function getAllConfig()
     {
         return Config::all();
     }
@@ -18,7 +18,12 @@ class ConfigService
         return Config::query()->whereIn('config_key', $keys)->pluck('config_value', 'config_key');
     }
 
- public function updateConfigs(array $form):bool
+    public function getConfig(ConfigName $key)
+    {
+        return Config::query()->where('config_key', $key->value)->first();
+    }
+
+    public function updateConfigs(array $form): bool
     {
         try {
             DB::beginTransaction();
@@ -30,7 +35,7 @@ class ConfigService
             }
             DB::commit();
             return true;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             return false;
         }
