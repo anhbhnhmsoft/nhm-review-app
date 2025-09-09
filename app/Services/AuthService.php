@@ -24,39 +24,27 @@ class AuthService
     /**
      * Đăng ký user mới
      */
-    public function register(array $data): User
+    public function register(array $data): ?User
     {
         $payload = [
             'name' => $data['name'] ?? null,
             'email' => isset($data['email']) ? Str::lower(trim($data['email'])) : null,
             'password' => $data['password'] ?? null,
         ];
-
-        Validator::make($payload, [
-            'name' => ['bail', 'required', 'string', 'max:120'],
-            'email' => ['bail', 'required', 'email', Rule::unique('users', 'email')],
-            'password' => ['bail', 'required', 'string', 'min:6'],
-        ])->validate();
+        DB::beginTransaction();
         try {
-            return DB::transaction(function () use ($payload) {
-                $user = User::create([
-                    'name'     => $payload['name'],
-                    'email'    => $payload['email'],
-                    'password' => Hash::make($payload['password']),
-                    'role'     => UserRole::USER,
-                ]);
-
-                event(new Registered($user));
-                $this->sendEmailVerificationNotification($user);
-                return $user;
-            });
-        } catch (QueryException $e) {
-            if ($e->getCode() === '23000') {
-                throw ValidationException::withMessages([
-                    'email' => 'Email đã tồn tại.',
-                ]);
-            }
-            throw $e;
+            $user = User::query()->create([
+                'name'     => $payload['name'],
+                'email'    => $payload['email'],
+                'password' => Hash::make($payload['password']),
+                'role'     => UserRole::USER,
+            ]);
+            event(new Registered($user));
+            $this->sendEmailVerificationNotification($user);
+            DB::commit();
+            return $user;
+        } catch (\Exception $e) {
+            return null;
         }
     }
 
@@ -109,14 +97,8 @@ class AuthService
         if ($user->hasVerifiedEmail()) {
             return;
         }
-        $url = route('verify', ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]);
-        try {
-            $user->notify(new RegisterEmailVerification($url));
-        } catch (\Throwable $e) {
-            // Bắt lỗi tại đây
-            Log::error('Gửi email verify thất bại: ' . $e->getMessage());
-            throw $e; // hoặc return message
-        }
+        $url = route('verification.verify', ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]);
+        $user->notify(new RegisterEmailVerification($url));
     }
 
     public function verifyEmailUser($id, $hash)

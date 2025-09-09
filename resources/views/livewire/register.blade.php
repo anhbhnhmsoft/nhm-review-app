@@ -65,7 +65,7 @@
            disabled:opacity-50 disabled:cursor-not-allowed"
                             wire:loading.attr="disabled" wire:target="register">
                             <span wire:loading.remove wire:target="register">
-                                Đăng nhập
+                                Đăng ký
                             </span>
                             <span wire:loading wire:target="register">
                                 Đang xử lý...
