@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Services\StoreService;
+use App\Utils\HelperFunction;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -41,11 +42,9 @@ class Store extends BaseComponent
             abort(404);
         } else {
             $this->store = $data;
-            $openingTime = Carbon::createFromFormat('H:i', $data->opening_time);
-            $closingTime = Carbon::createFromFormat('H:i', $data->closing_time);
-            $now = Carbon::now();
-
-            $this->openStore = $now->between($openingTime, $closingTime);
+            // Tăng lượt view
+            $data->increment('view');
+            $this->openStore = HelperFunction::checkIsStoreOpen(openingTime: $data->opening_time, closingTime: $data->closing_time);
             $this->avgRating = $this->storeService->getAverageRating($data);
             $this->avgRatingTotal = $this->storeService->getOverallAverageRating($data);
         }

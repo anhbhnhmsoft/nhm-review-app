@@ -114,28 +114,12 @@ class StoreForm
                                 ->required()
                                 ->columnSpanFull()
                                 ->options(function (Get $get) {
-                                    // if edit
-                                    if ($get('id')) {
-                                        return Category::query()
-                                            ->where('status', CategoryStatus::ACTIVE->value)
-                                            ->orWhere('id', $get('category_id'))
-                                            ->limit(10)
-                                            ->pluck('name', 'id')
-                                            ->all();
-                                    }else{
-                                        return Category::query()
-                                            ->where('status', CategoryStatus::ACTIVE->value)
-                                            ->limit(10)
-                                            ->pluck('name', 'id')
-                                            ->all();
-                                    }
+                                    return Category::query()
+                                        ->where('status', CategoryStatus::ACTIVE->value)
+                                        ->orWhere('id', $get('category_id'))
+                                        ->pluck('name', 'id')
+                                        ->all();
                                 })
-                                ->getSearchResultsUsing(fn(string $search): array => Category::query()
-                                    ->where('name', 'like', "%{$search}%")
-                                    ->where('status', CategoryStatus::ACTIVE->value)
-                                    ->limit(10)
-                                    ->pluck('name', 'id')
-                                    ->all())
                                 ->loadingMessage('Chờ 1 chút...')
                                 ->noSearchResultsMessage('Không tìm thấy danh mục.')
                                 ->rules([
@@ -248,11 +232,7 @@ class StoreForm
                                         ->label('Số điện thoại liên hệ')
                                         ->suffixIcon(Heroicon::Phone)
                                         ->trim()
-                                        ->helperText('Nhập số điện thoại liên hệ theo định dạng, ví dụ: 0912345678 hoặc +84912345678')
-                                        ->regex('/^(0|\+84)[0-9]{9}$/')
-                                        ->validationMessages([
-                                            'regex' => 'Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng số Việt Nam.',
-                                        ]),
+                                        ->helperText('Nhập số điện thoại liên hệ theo định dạng, ví dụ: 0912345678 hoặc +84912345678'),
                                     TextInput::make('facebook_page')
                                         ->label('Facebook Page')
                                         ->placeholder('Nhập đường dẫn Facebook Page'),
