@@ -65,7 +65,7 @@
                     </div>
                     <div class="col-span-2 mt-2 md:col-span-2 lg:col-span-2 lg:ml-8 2xl:ml-12">
                         <div>
-                            <p class="mt-6 text-base font-bold text-white">
+                            <p class="mt-6 text-base font-bold text-white text-center md:text-none">
                                 Liên kết
                             </p>
                             <ul class="mt-2 flex items-center justify-center space-x-4">

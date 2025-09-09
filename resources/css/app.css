@@ -54,9 +54,6 @@
     @apply p-4 bg-white
 }
 
-
-
-
 .section_absolute{
     @apply px-[280px] absolute
 }
