@@ -42,7 +42,7 @@ class SaveLocation extends Component
                 flash()->error('Có lỗi xảy ra, vui lòng thử lại sau');
             }
         }else{
-            $this->redirect('frontend.login');
+            redirect()->route('frontend.login');
         }
     }
 
