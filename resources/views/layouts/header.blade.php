@@ -1,7 +1,7 @@
 @php use App\Utils\Constants\ConfigName; @endphp
 <div>
     <header class="bg-white d_section">
-        <div class="container flex py-4 lg:py-6 justify-between items-center">
+        <div class="container flex py-4 lg:py-6 justify-between items-center w-full">
             <div class="logo">
                 <a href="{{ route('dashboard') }}">
                     @if(isset($configs[ConfigName::LOGO->value]))

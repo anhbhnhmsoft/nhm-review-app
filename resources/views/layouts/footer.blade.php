@@ -21,46 +21,23 @@
                     </div>
                     <div class="col-span-2 hidden md:col-span-3 lg:col-span-2 lg:block lg:pr-0">
                         <div class="mt-4 grid grid-cols-1 gap-x-4 md:grid-cols-2">
-                            <ul class="mt-6 space-y-4">
-                                <li class="font-bold text-white">Hỗ trợ khách hàng</li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Chính sách giải quyết khiếu nại</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Chính sách bảo mật</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Chính sách bảo vệ và xử lý dữ liệu cá
-                                        nhân</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Quy định đăng tin</a>
-                                </li>
-                            </ul>
-                            <ul class="mt-6 space-y-4">
-                                <li class="font-bold text-white">Về Afy</li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Giới thiệu</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Điều khoản sử dụng</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Quy chế hoạt động</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Chính sách bảo mật</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Trung tâm khách hàng</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Truyền thông</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-white hover:link">Hỏi đáp (FAQ)</a>
-                                </li>
-                            </ul>
+                            @php
+                                $chunks = isset($footerPages) ? $footerPages->chunk(4) : collect();
+                            @endphp
+                            @foreach($chunks as $chunk)
+                                <ul class="mt-6 space-y-4">
+                                    @if($loop->first)
+                                        <li class="font-bold text-white">Trang Hỗ trợ khách hàng</li>
+                                    @else
+                                        <li class="font-bold text-white">Về Afy</li>
+                                    @endif
+                                    @foreach($chunk as $page)
+                                        <li>
+                                            <a href="{{ route('frontend.page-static', ['slug' => $page->slug]) }}" class="text-white hover:link">{{ $page->title }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endforeach
                         </div>
                     </div>
                     <div class="col-span-2 mt-2 md:col-span-2 lg:col-span-2 lg:ml-8 2xl:ml-12">

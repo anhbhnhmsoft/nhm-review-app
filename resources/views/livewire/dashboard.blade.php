@@ -222,7 +222,7 @@
                         <span class="font-medium text-gray-500">25/08/2025</span>
                     </div>
                     <div class="my-4"
-                         x-data="{ text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt magna non malesuada.malesuadam alesuadam alesuadamale suadamale suadamalesuadamal esuadamalesuadama lesuadamalesuadamal es uadamalesuada' }">
+                         x-data="{ text: 'AFY - Website review các địa điểm hàng đầu việt nam trong bối cảnh kỷ nguyên số hóa, nhiều doanh nghiệp Việt Nam đang đối mặt với thách thức lớn về cách tiếp cận khách hàng mới và xây dựng thương hiệu...' }">
                         <p class="text-gray-500" x-text="text.length > 200 ? text.slice(0, 200) + '...' : text"></p>
                     </div>
                     <div class="">

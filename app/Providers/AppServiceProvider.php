@@ -8,6 +8,8 @@ use App\Services\ConfigService;
 use App\Services\ProvinceService;
 use App\Services\ReviewService;
 use App\Services\StoreService;
+use Illuminate\Support\Facades\View;
+use App\Services\ArticleService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(StoreService::class, fn() => new StoreService());
         $this->app->singleton(ReviewService::class, fn() => new ReviewService());
         $this->app->singleton(ConfigService::class, fn() => new ConfigService());
+        $this->app->singleton(ArticleService::class, fn() => new ArticleService());
 
     }
 
@@ -31,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('layouts.footer', function ($view) {
+            $pages = app(ArticleService::class)->getStaticPages();
+            $view->with('footerPages', $pages);
+        });
     }
 }

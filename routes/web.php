@@ -36,3 +36,6 @@ Route::prefix('common')->group(function () {
 Route::get('/email/xac-minh/{id}/{hash}', [\App\Http\Controllers\AuthController::class, 'verify'])
     ->middleware(['throttle:6,1'])
     ->name('verification.verify');
+
+Route::get('/{slug}', \App\Livewire\PageStatic::class)
+    ->name('frontend.page-static');
