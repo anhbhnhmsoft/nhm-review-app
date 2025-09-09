@@ -149,4 +149,9 @@ class Store extends Model
     {
         return $this->belongsToMany(Utility::class, 'store_utility', 'store_id', 'utility_id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_store', 'store_id', 'user_id');
+    }
 }

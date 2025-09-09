@@ -54,9 +54,6 @@
     @apply p-4 bg-white
 }
 
-
-
-
 .section_absolute{
     @apply px-[280px] absolute
 }
@@ -74,3 +71,22 @@
 .swiper-pagination-bullet-active{
     @apply !bg-gray-600;
 }
+
+.rich-content {
+    @apply prose max-w-none;
+}
+.rich-content h1 { @apply text-3xl font-bold mt-6 mb-4; }
+.rich-content h2 { @apply text-2xl font-bold mt-5 mb-3; }
+.rich-content h3 { @apply text-xl font-semibold mt-4 mb-2; }
+.rich-content h4 { @apply text-lg font-semibold mt-4 mb-2; }
+.rich-content p { @apply leading-7 my-3; }
+.rich-content ul { @apply list-disc pl-6 my-3; }
+.rich-content ol { @apply list-decimal pl-6 my-3; }
+.rich-content li { @apply my-1; }
+.rich-content b, .rich-content strong { @apply font-semibold; }
+.rich-content a { @apply text-blue-600 underline; }
+.rich-content blockquote { @apply border-l-4 border-gray-300 pl-4 italic my-4 text-gray-700; }
+.rich-content table { @apply w-full border-collapse my-4; }
+.rich-content th, .rich-content td { @apply border border-gray-200 px-3 py-2; }
+.rich-content img { @apply max-w-full h-auto my-4; }
+.rich-content hr { @apply my-6 border-gray-200; }

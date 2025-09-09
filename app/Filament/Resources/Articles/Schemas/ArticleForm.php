@@ -171,8 +171,8 @@ class ArticleForm
                             ->columnSpanFull()
                             ->validationMessages([
                                 'required' => 'Vui lòng nhập Mô tả chi tiết',
-                            ]),
-
+                            ])
+                            ->extraAttributes(['style' => 'min-height: 300px;']),
                     ]),
 
                 Section::make('article_seo')

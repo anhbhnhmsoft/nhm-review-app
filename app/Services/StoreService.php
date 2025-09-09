@@ -23,6 +23,24 @@ class StoreService
             ->canShow();
     }
 
+    public function checkStatusSaveLocation(Store $store): bool
+    {
+        if (auth()->guard('web')->check()){
+            return $store->users()->whereKey(auth()->guard('web')->id())->exists();
+        }
+        return false;
+    }
+
+    public function toggleFavoriteStore(Store $store): bool
+    {
+        try {
+            $store->users()->toggle(auth()->guard('web')->id());
+            return true;
+        }catch (\Exception $exception){
+            return false;
+        }
+    }
+
     public function getStoreBySlug($slug): Store|null
     {
         try {
@@ -74,7 +92,7 @@ class StoreService
         return 0;
     }
 
-    public function searchStores(array $filters = [], $sortBy = '', $lat = null, $lng = null,): LengthAwarePaginator
+    public function searchStores(array $filters = [], $sortBy = '', $lat = null, $lng = null): LengthAwarePaginator
     {
         try {
             $query = $this->filters($filters);

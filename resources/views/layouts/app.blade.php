@@ -3,6 +3,7 @@
     <head>
         @livewireStyles
         @include('layouts.head')
+        @csrf
     </head>
     <body class="bg-white">
         @if(!(isset($hideLayout) && $hideLayout === true))

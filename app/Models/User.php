@@ -15,8 +15,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-    use SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -73,11 +72,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         if ($panel->getId() === 'admin') {
             return $this->role === UserRole::ADMIN->value;
         }
+        return false;
     }
     public function isAdmin(): bool
     {
         return $this->role == UserRole::ADMIN->value;
     }
 
-    public function sendEmailVerificationNotification() {}
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_store', 'store_id', 'user_id');
+    }
 }

@@ -1,7 +1,7 @@
 @php use App\Utils\Constants\ConfigName; @endphp
 <div>
     <header class="bg-white d_section">
-        <div class="container flex py-4 lg:py-6 justify-between items-center">
+        <div class="container flex py-4 lg:py-6 justify-between items-center w-full">
             <div class="logo">
                 <a href="{{ route('dashboard') }}">
                     @if(isset($configs[ConfigName::LOGO->value]))
@@ -101,11 +101,8 @@
                                 <a href="#" class="text-base font-bold ">
                                     Video
                                 </a>
-                                <a href="#" class="text-base font-bold ">
-                                    Cẩm nang
-                                </a>
-                                <a href="#" class="text-base font-bold ">
-                                    Tin tức
+                                <a href="{{ route('frontend.news') }}" class="text-base font-bold ">
+                                    Tin tức & Cẩm nang
                                 </a>
                             </nav>
                         </div>
@@ -116,7 +113,7 @@
         </div>
     </header>
 
-    <div class="hidden lg:flex items-center justify-center bg-green-500">
+    <div class="hidden lg:flex items-center justify-center bg-[#52ab5c]">
         <nav class="container !flex items-center justify-between gap-4 py-4">
             <a href="#" class="text-base font-bold text-white">
                 Mới nhất
@@ -130,11 +127,8 @@
             <a href="#" class="text-base font-bold text-white">
                 Video
             </a>
-            <a href="#" class="text-base font-bold text-white">
-                Cẩm nang
-            </a>
-            <a href="#" class="text-base font-bold text-white">
-                Tin tức
+            <a href="{{ route('frontend.news') }}" class="text-base font-bold text-white">
+                Tin tức & Cẩm nang
             </a>
         </nav>
     </div>

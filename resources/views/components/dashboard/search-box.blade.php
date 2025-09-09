@@ -7,12 +7,12 @@
                autocomplete="off"
                class="input !border-none !outline-none lg:px-[25px] lg:!py-[23px] w-full col-span-3"
         />
-        <button class="btn text-white bg-blue-600 hover:bg-blue-400 rounded-lg lg:px-[25px] lg:py-[23px] ">
+        <button class="btn text-white bg-blue-600 hover:bg-blue-700 rounded-lg lg:px-[25px] lg:py-[23px] ">
             <i class="fa-solid fa-magnifying-glass"></i>
             <span class="text-base hidden lg:inline"> Khu vực</span>
         </button>
         <a href="{{ route('frontend.search-store') }}"
-           class="btn text-white bg-green-600 hover:bg-green-400 rounded-lg px-[25px] py-[23px] hidden lg:flex">
+           class="btn text-white bg-green-600 hover:bg-green-700 rounded-lg px-[25px] py-[23px] hidden lg:flex">
             <span class="text-base">Tìm địa điểm</span>
         </a>
     </div>
