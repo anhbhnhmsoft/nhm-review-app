@@ -58,7 +58,7 @@ class Register extends BaseComponent
 
         if ($user) {
             flash()->success('Vui lòng kiểm tra và xác nhận email để hoàn tất đăng ký!');
-            redirect(route('frontend.login'));
+            return redirect(route('frontend.login'));
         } else {
             flash()->error('Có lỗi vui lòng thử lại sau!');
         }
