@@ -31,7 +31,4 @@ class AuthController extends Controller
         flash()->error('Liên kết xác minh không hợp lệ hoặc đã hết hạn.');
         return redirect()->route('frontend.login');
     }
-    public function test() {
-        dd('fdasf');
-    }
 }
