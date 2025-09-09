@@ -46,9 +46,17 @@
                         @enderror
                     </fieldset>
                     <div class="mt-8">
-                        <button role="button" type="submit"
-                            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600 py-4 w-full cursor-pointer">Đăng
-                            nhập</button>
+                        <button type="submit"
+                            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600 py-4 w-full cursor-pointer
+           disabled:opacity-50 disabled:cursor-not-allowed"
+                            wire:loading.attr="disabled" wire:target="login">
+                            <span wire:loading.remove wire:target="login">
+                                Đăng nhập
+                            </span>
+                            <span wire:loading wire:target="login">
+                                Đang xử lý...
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
