@@ -3,14 +3,20 @@
 namespace App\Livewire\SearchStore;
 
 use App\Models\Store;
+use App\Services\StoreService;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class CardStore extends Component
 {
+    private StoreService $storeService;
+
 
     public Store $store;
     public $lat_location;
     public $lng_location;
+
+
 
     public function mount(Store $store, $lat_location = null, $lng_location = null)
     {
@@ -18,6 +24,7 @@ class CardStore extends Component
         $this->lat_location = $lat_location;
         $this->lng_location = $lng_location;
     }
+
 
     public function render()
     {

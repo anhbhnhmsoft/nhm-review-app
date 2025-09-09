@@ -272,6 +272,17 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::create('user_store', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('store_id')
+                ->constrained('stores')
+                ->onDelete('cascade');
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->unique(['user_id', 'store_id']);
+        });
     }
 
     /**
@@ -279,6 +290,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('user_store');
         Schema::dropIfExists('store_utility');
         Schema::dropIfExists('utilities');
         Schema::dropIfExists('configs');

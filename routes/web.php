@@ -27,4 +27,6 @@ Route::prefix('common')->group(function () {
     Route::get('/district/{code}', [CommonController::class, 'getDistricts']);
     Route::get('/ward/{code}', [CommonController::class, 'getWards']);
 });
-Route::get('/verify/{id}/{hash}', [\App\Http\Controllers\AuthController::class, 'verify'])->name('verify');
+Route::get('/email/xac-minh/{id}/{hash}', [\App\Http\Controllers\AuthController::class, 'verify'])
+    ->middleware(['throttle:6,1'])
+    ->name('verification.verify');
