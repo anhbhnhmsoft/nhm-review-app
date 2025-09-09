@@ -63,6 +63,81 @@ new Swiper('.store__category', {
     }
 });
 
+new Swiper('.other-articles-swiper', {
+    slidesPerView: 'auto',
+    spaceBetween: 24,
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    },
+    navigation: {
+        nextEl: ".other-articles-next",
+        prevEl: ".other-articles-prev",
+    },
+    loop: false,
+    speed: 500,
+    breakpoints: {
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 16,
+        },
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        768: {
+            slidesPerView: 3,
+            spaceBetween: 24,
+        },
+        1024: {
+            slidesPerView: 4,
+            spaceBetween: 24,
+        },
+    },
+});
+
+new Swiper('.news-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 16,
+    navigation: {
+        nextEl: ".news-next",
+        prevEl: ".news-prev",
+    },
+    loop: true,
+    speed: 500,
+    breakpoints: {
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 16,
+        },
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+    },
+});
+
+new Swiper('.handbook-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 16,
+    navigation: {
+        nextEl: ".handbook-next",
+        prevEl: ".handbook-prev",
+    },
+    loop: true,
+    speed: 500,
+    breakpoints: {
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 16,
+        },
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+    },
+});
+
 window.Swiper = Swiper;
 
 

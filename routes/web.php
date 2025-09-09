@@ -20,6 +20,12 @@ Route::get('/dang-ky', \App\Livewire\Register::class)->name('frontend.register')
 Route::get('/dang-xuat', [\App\Http\Controllers\AuthController::class, 'logout'])->name('frontend.logout');
 Route::get('/dia-diem/{slug}', \App\Livewire\Store::class)->name('frontend.store');
 Route::get('/tim-kiem', \App\Livewire\SearchStore::class)->name('frontend.search-store');
+Route::get('/bai-viet', \App\Livewire\News::class)->name('frontend.news');
+
+Route::get('/bai-viet/{slug}', \App\Livewire\ArticleDetail::class)->name('frontend.article-detail');
+Route::get('/tin-tuc/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.news');
+Route::get('/bao-chi/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.press');
+Route::get('/cam-nang/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.handbook');
 
 Route::prefix('common')->group(function () {
     Route::get('/google-map', [CommonController::class, 'getKeyGoogleMap']);

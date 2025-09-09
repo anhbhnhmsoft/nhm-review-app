@@ -2,7 +2,7 @@
 
 namespace App\Utils\Constants;
 
-enum CategoryStatus:int
+enum CategoryStatus: int
 {
     case ACTIVE = 1;
     case INACTIVE = 2;
@@ -15,8 +15,8 @@ enum CategoryStatus:int
         ];
     }
 
-        public function getLabel(CategoryStatus $state): array
+    public function getLabel(CategoryStatus $state): array
     {
-            return self::getOptions()[$state->value];
+        return self::getOptions()[$state->value];
     }
 }
