@@ -70,6 +70,7 @@ export const MapPlugin = {
             if (firstOpen){
                 marker.click();
             }
+            return marker;
         },
         buildContentStore: (store) => {
             const content = document.createElement("div");

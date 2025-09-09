@@ -1,7 +1,4 @@
-const GeoPlugin = {
-    state: {
-        user: { lat: null, lng: null },
-    },
+export const GeoPlugin = {
     util: {
         toRad(value) { return value * Math.PI / 180; },
         haversineDistance(lat1, lon1, lat2, lon2) {
@@ -15,22 +12,42 @@ const GeoPlugin = {
             return R * c;
         },
     },
-    init() {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(function (pos) {
-                GeoPlugin.state.user.lat = pos.coords.latitude;
-                GeoPlugin.state.user.lng = pos.coords.longitude;
-                
-                window.dispatchEvent(new CustomEvent('geolocation-updated', {
-                    detail: { lat: pos.coords.latitude, lng: pos.coords.longitude }
-                }));
-            }, function () {
-                window.dispatchEvent(new CustomEvent('geolocation-error'));
-            }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
-        }
+    getCurrentLocation() {
+        const defaultOptions = {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+        };
+        return new Promise((resolve, reject) => {
+            if (!('geolocation' in navigator)) {
+                return reject(new Error('Trình duyệt không hỗ trợ Geolocation.'));
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const {
+                        latitude, longitude, accuracy,
+                        altitude, altitudeAccuracy, heading, speed
+                    } = pos.coords;
+                    resolve({
+                        lat: latitude,
+                        lng: longitude,
+                        accuracy,
+                        altitude,
+                        altitudeAccuracy,
+                        heading,
+                        speed,
+                        timestamp: pos.timestamp,
+                    });
+                },
+                (err) => {
+                    const msg = {
+                        1: 'Bạn đã từ chối quyền truy cập vị trí.',
+                        2: 'Không xác định được vị trí hiện tại.',
+                        3: 'Quá thời gian chờ lấy vị trí.',
+                    }[err.code] || err.message;
+                    reject(new Error(msg));
+                },
+                defaultOptions
+            );
+        });
     }
 };
-
-window.GeoPlugin = GeoPlugin;
-document.addEventListener('DOMContentLoaded', () => GeoPlugin.init());
-export default GeoPlugin;

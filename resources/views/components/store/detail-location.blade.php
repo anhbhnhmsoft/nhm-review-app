@@ -17,7 +17,7 @@
             let map = this.$mapPlugin.createMap(this.$refs.mapContainer, this._position, 16);
             this._map = map;
             this.$mapPlugin.plugin.createMarkerStore(map, this._position, {
-                name: '{{$store->name}}',
+                name: @js($store->name),
                 address: '{{$store->address}}',
                 rate: '{{$avgRatingTotal}}',
                 reviews_count: '{{$store->reviews_count}}',
