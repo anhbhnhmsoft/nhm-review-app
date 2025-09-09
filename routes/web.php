@@ -17,6 +17,7 @@ Route::get('/video/{file_path}', [FileController::class, 'video'])
 
 Route::get('/dang-nhap', \App\Livewire\Login::class)->name('frontend.login');
 Route::get('/dang-ky', \App\Livewire\Register::class)->name('frontend.register');
+Route::get('/dang-xuat', [\App\Http\Controllers\AuthController::class, 'logout'])->name('frontend.logout');
 Route::get('/dia-diem/{slug}', \App\Livewire\Store::class)->name('frontend.store');
 Route::get('/tim-kiem', \App\Livewire\SearchStore::class)->name('frontend.search-store');
 

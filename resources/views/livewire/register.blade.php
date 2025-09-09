@@ -2,8 +2,10 @@
     <div class="lg:fixed inset-0  min-h-screen bg-gradient-to-tl from-green-400 to-indigo-900 w-full lg:py-16 py-8 px-4">
         <!--- more free and premium Tailwind CSS components at https://tailwinduikit.com/ --->
         <div class="flex flex-col items-center justify-center">
-            <img src="{{ \App\Utils\HelperFunction::generateURLImagePath($this->logo_app->config_value) }}"
-                alt="{{ config('app.name') }}">
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ \App\Utils\HelperFunction::generateURLImagePath($this->logo_app->config_value) }}"
+                    alt="{{ config('app.name') }}">
+            </a>
 
             <div class="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-8">
                 <p tabindex="0" class="focus:outline-none text-2xl font-extrabold leading-6 text-gray-800">Đăng ký</p>
@@ -72,6 +74,12 @@
 
                     </div>
                 </form>
+                <div class="mt-4 text-center">
+                    <a href="{{ route('dashboard') }}"
+                        class="inline-block text-sm font-medium text-indigo-700 hover:underline">
+                        ← Trở về trang chủ
+                    </a>
+                </div>
             </div>
         </div>
     </div>
