@@ -150,7 +150,8 @@ class StoreForm
                                 ->columnSpanFull()
                                 ->validationMessages([
                                     'required' => 'Vui lòng nhập Mô tả chi tiết',
-                                ]),
+                                ])
+                                ->extraAttributes(['style' => 'min-height: 300px;']),
                             Toggle::make('featured')
                                 ->label("Là cửa hàng nổi bật")
                                 ->default(false)

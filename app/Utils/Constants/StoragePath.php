@@ -11,7 +11,6 @@ enum StoragePath:string
     case REVIEW_PATH = "review_images";
     case CONFIG_PATH = "config_images";
 
-
     public static function makePath(StoragePath $type, string $filename): string
     {
         return $type->value . DIRECTORY_SEPARATOR . $filename;
