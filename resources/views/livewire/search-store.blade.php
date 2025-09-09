@@ -301,4 +301,3 @@
         </div>
     </template>
 </div>
-@vite(['resources/js/geo.js'])
