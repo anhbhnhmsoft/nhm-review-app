@@ -1,1 +1,0 @@
-<button class="btn btn-outline bg-white">{{ $label }}</button>

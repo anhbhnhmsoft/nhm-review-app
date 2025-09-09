@@ -65,7 +65,7 @@
                                         lazy
                                 />
                             </div>
-                            @foreach($store->storeFiles as $file)
+                            @foreach($store->storeFiles->take(4) as $file)
                                 @if(!$loop->first)
                                     @if($loop->index == 1)
                                     <div class="hidden lg:block col-span-2">
@@ -77,7 +77,7 @@
                                                 lazy
                                         />
                                     </div>
-                                    @elseif($loop->last && (($store->store_files_count - $store->storeFiles->count()) >= 1))
+                                    @elseif($loop->index == 3 && (($store->store_files_count - $store->storeFiles->count()) >= 1))
                                     <div class="hidden lg:block">
                                         <livewire:store.media-heading
                                                 :slug="$store->slug"
@@ -88,6 +88,8 @@
                                                 lazy
                                         />
                                     </div>
+                                    @break
+
                                     @else
                                     <div class="hidden lg:block">
                                         <livewire:store.media-heading

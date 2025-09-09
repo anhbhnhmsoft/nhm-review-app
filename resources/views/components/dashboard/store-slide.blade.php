@@ -22,12 +22,12 @@
         </div>
         <div class="hidden lg:inline-flex items-center gap-2">
             @foreach($category_child as $child)
-                <a href="{{route('frontend.search-store',['filters' => ['category_id' => $child->id]])}}" class="font-medium hover:text-blue-500 transition-all duration-200">
+                <a href="{{route('frontend.search-store',['filters' => ['category_ids' => [$child->id]]])}}" class="font-medium hover:text-blue-500 transition-all duration-200">
                     {{$child->name}}
                 </a>
                 <span class="font-medium">-</span>
             @endforeach
-            <a href="{{route('frontend.search-store',['filters' => ['category_id' => $category->id]])}}" class="font-medium  text-blue-500">
+            <a href="{{route('frontend.search-store',['filters' => ['category_ids' => [$category->id]]])}}" class="font-medium  text-blue-500">
                 Xem tất cả
             </a>
         </div>

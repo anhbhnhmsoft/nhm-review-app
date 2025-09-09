@@ -20,23 +20,32 @@ class SearchStore extends BaseComponent
     /**
      * ---- State ----
      */
+    #[Url(history: true)]
+    public array $filters = [
+        'category_ids' => [],
+        'province_code' => null,
+        'district_code' => null,
+        'ward_code' => null,
+        'utilities' => [],
+        'opening_now' => 'all',
+    ];
 
-    public $filters = [];
     public $status = null;
-    public $openingNow = 'all';
+
     public $categories = [];
-    public $selectedCategories = [];
+
     public $provinces = [];
-    public $selectedProvince = null;
     public $districts = [];
-    public $selectedDistrict = null;
+
     public $wards = [];
-    public $selectedWard = null;
+
     public $utilities = [];
-    public $selectedUtilities = [];
-    public $sortBy = null;
-    public $userLat = null;
-    public $userLng = null;
+    public $sortBy = '';
+
+    public $lat = null;
+
+    public $lng = null;
+    public $stores_map = [];
 
     public function boot(StoreService $storeService, CategoryService $categoryService, ProvinceService $provinceService, UtilityService $utilityService): void
     {
@@ -48,136 +57,139 @@ class SearchStore extends BaseComponent
         $this->loadFilterOptions();
     }
 
-    public function mount()
-    {
-
-    }
-
     public function render()
     {
-        $stores = $this->storeService->searchStores([
-            'status' => $this->status,
-            'opening_now' => $this->openingNow,
-            'category_id' => $this->selectedCategories,
-            'province_code' => $this->selectedProvince,
-            'district_code' => $this->selectedDistrict,
-            'ward_code' => $this->selectedWard,
-            'utility_id' => $this->selectedUtilities,
-            'sort_by' => $this->sortBy,
-            'user_lat' => $this->userLat,
-            'user_lng' => $this->userLng,
-        ]);
-
+        $stores = $this->storeService->searchStores(
+            filters: $this->filters,
+            sortBy: $this->sortBy,
+            lat: $this->lat,
+            lng: $this->lng
+        );
+        $this->stores_map = $stores->getCollection()->map(fn($s) => [
+                'id' => $s->id,
+                'name' => $s->name,
+                'address' => $s->address,
+                'rate' => $s->reviews_avg ? round($s->reviews_avg, 2) : 0,
+                'reviews_count' => $s->reviews_count,
+                'path' => \App\Utils\HelperFunction::generateURLImagePath($s->logo_path),
+                'lat' => (float) $s->latitude,
+                'lng' => (float) $s->longitude,
+            ])
+            ->toArray();
         return $this->view('livewire.search-store', [
             'stores' => $stores,
         ]);
     }
 
-    private function loadFilterOptions(): void
+    public function hasActiveFilters(): bool
     {
-        $categoryList = $this->categoryService->getAllCategoryForHomePage();
-        $this->categories = $categoryList ? $categoryList->pluck('name', 'id')->toArray() : [];
-
-        $provinces = $this->provinceService->getProvinces();
-        $this->provinces = $provinces ? $provinces->pluck('name', 'code')->toArray() : [];
-
-        $utilities = $this->utilityService->getUtilitiesForSelect();
-        $this->utilities = $utilities ?: [];
+        return collect($this->filters)
+            ->filter(fn ($v, $k) => $k === 'opening_now' ? $v !== 'all' : filled($v))
+            ->isNotEmpty();
     }
-
-    private function loadDistricts(): void
+    public function setDefaultFilters()
     {
-        if (!empty($this->selectedProvince)) {
-            $districts = $this->provinceService->getDistrictsByCodeProvince($this->selectedProvince);
-            $this->districts = $districts ? $districts->pluck('name', 'code')->toArray() : [];
-        } else {
-            $this->districts = [];
-        }
-    }
-
-    private function loadWards(): void
-    {
-        if (!empty($this->selectedDistrict)) {
-            $wards = $this->provinceService->getWardsByCodeDistrict($this->selectedDistrict);
-            $this->wards = $wards ? $wards->pluck('name', 'code')->toArray() : [];
-        } else {
-            $this->wards = [];
-        }
+        $this->filters = [
+            'category_ids' => [],
+            'province_code' => null,
+            'district_code' => null,
+            'ward_code' => null,
+            'utilities' => [],
+            'opening_now' => 'all'
+        ];
+        $this->sortBy = '';
     }
 
     public function updated($name): void
     {
-        $keysToReset = [
-            'openingNow',
-            'selectedCategories',
-            'selectedProvince',
-            'selectedDistrict',
-            'selectedWard',
-            'selectedUtilities',
-            'status',
-            'sortBy',
-        ];
-
-        if (in_array($name, $keysToReset, true)) {
-            if ($name === 'selectedProvince') {
-                $this->selectedDistrict = null;
-                $this->selectedWard     = null;
-                $this->wards            = [];
-                $this->loadDistricts();
-            }
-            if ($name === 'selectedDistrict') {
-                $this->selectedWard = null;
-                $this->loadWards();
-            }
-            $this->resetPage();
+        if ($name === 'filters.province_code') {
+            $this->filters['district_code'] = null;
+            $this->filters['ward_code'] = null;
+            $this->wards = [];
+            $this->loadDistricts();
         }
+        if ($name === 'filters.district_code') {
+            $this->filters['ward_code'] = null;
+            $this->loadWards();
+        }
+        $this->resetPage();
     }
 
     public function clearFilter(string $key, $id = null): void
     {
         switch ($key) {
-            case 'all':
-                $this->status = null;
-                $this->openingNow = 'all';
-                $this->selectedCategories = [];
-                $this->selectedProvince = null;
-                $this->selectedDistrict = null;
-                $this->selectedWard = null;
-                $this->selectedUtilities = [];
+            case 'opening_now':
+                $this->filters['opening_now'] = 'all';
+                break;
+            case 'category_ids':
+            case 'utilities':
+                if ($id){
+                    $this->filters[$key] = array_filter($this->filters[$key], fn ($v) => $v != $id);
+                }else{
+                    $this->filters[$key] = [];
+                }
+                break;
+            case 'province_code':
+                $this->filters['province_code'] = null;
+                $this->filters['district_code'] = null;
+                $this->filters['ward_code'] = null;
                 $this->districts = [];
                 $this->wards = [];
                 break;
-            case 'openingNow':
-                $this->openingNow = 'all';
-                break;
-            case 'category':
-                $this->selectedCategories = array_values(array_filter(
-                    $this->selectedCategories ?? [],
-                    fn ($cid) => (int) $cid !== (int) $id
-                ));
-                break;
-            case 'utility':
-                $this->selectedUtilities = array_values(array_filter(
-                    $this->selectedUtilities ?? [],
-                    fn ($uid) => (int) $uid !== (int) $id
-                ));
-                break;
-            case 'province':
-                $this->selectedProvince = null;
-                $this->selectedDistrict = null;
-                $this->selectedWard = null;
-                $this->districts = [];
+            case 'district_code':
+                $this->filters['district_code'] = null;
+                $this->filters['ward_code'] = null;
                 $this->wards = [];
                 break;
-            case 'district':
-                $this->selectedDistrict = null;
-                $this->selectedWard = null;
-                $this->wards = [];
-                break;
-            case 'ward':
-                $this->selectedWard = null;
+            default:
+                $this->filters[$key] = null;
                 break;
         }
         $this->resetPage();
+    }
+
+    /**
+     * Private
+     */
+    private function loadFilterOptions(): void
+    {
+        $this->loadUtilities();
+        $this->loadCategories();
+        $this->loadProvinces();
+        $this->loadDistricts();
+        $this->loadWards();
+    }
+    private function loadUtilities()
+    {
+        $utilities = $this->utilityService->getUtilitiesForSelect();
+        $this->utilities = $utilities ?: [];
+    }
+    private function loadCategories()
+    {
+        $categoryList = $this->categoryService->getAllCategoryForHomePage();
+        $this->categories = $categoryList ? $categoryList->pluck('name', 'id')->toArray() : [];
+    }
+    private function loadProvinces()
+    {
+        $provinces = $this->provinceService->getProvinces();
+        $this->provinces = $provinces ? $provinces->pluck('name', 'code')->toArray() : [];
+    }
+    private function loadDistricts(): void
+    {
+        if (!empty($this->filters['province_code'])) {
+            $districts = $this->provinceService->getDistrictsByCodeProvince($this->filters['province_code']);
+            $this->districts = $districts ? $districts->pluck('name', 'code')->toArray() : [];
+        } else {
+            $this->districts = [];
+        }
+    }
+    private function loadWards(): void
+    {
+        if (!empty($this->filters['district_code'])) {
+            $wards = $this->provinceService->getWardsByCodeDistrict($this->filters['district_code']);
+            $this->wards = $wards ? $wards->pluck('name', 'code')->toArray() : [];
+        } else {
+            $this->wards = [];
+        }
     }
 }

@@ -15,9 +15,7 @@ class StoreService
     protected function queryStoreItem()
     {
         return Store::query()->with([
-            'storeFiles' => function ($query) {
-                $query->limit(4);
-            },
+            'storeFiles',
             'utilities',
             'reviews',
         ])
@@ -27,7 +25,11 @@ class StoreService
 
     public function getStoreBySlug($slug): Store|null
     {
-        return $this->queryStoreItem()->where('slug', $slug)->first();
+        try {
+            return $this->queryStoreItem()->where('slug', $slug)->first();
+        }catch (\Exception $exception){
+            throw $exception;
+        }
     }
 
     public function getStoreNearLocation($lat, $lng, float $radiusKm = 5)
@@ -72,19 +74,16 @@ class StoreService
         return 0;
     }
 
-    public function searchStores(array $filters = []): LengthAwarePaginator
+    public function searchStores(array $filters = [], $sortBy = '', $lat = null, $lng = null,): LengthAwarePaginator
     {
         try {
             $query = $this->filters($filters);
-
-            $lat = $filters['user_lat'] ?? null;
-            $lng = $filters['user_lng'] ?? null;
             $hasDistance = $this->distanceSelect($query, $lat, $lng);
 
             $query = $this->sortBy(
                 $query,
-                $filters['sort_by'] ?? 'created_at',
-                $filters['sort_direction'] ?? 'desc',
+                $sortBy,
+                'desc',
                 $hasDistance
             );
 
@@ -113,8 +112,6 @@ class StoreService
                 $q->select(DB::raw('avg((rating_location + rating_space + rating_quality + rating_serve) / 4)'));
             }])
             ->whereIn('status', [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value]);
-
-
 
         if (!empty($filters['id'])){
             $query->where('id', $filters['id']);
@@ -166,7 +163,7 @@ class StoreService
     private function distanceSelect($query, ?float $lat, ?float $lng): bool
     {
         if ($lat && $lng) {
-            $query->addSelect('stores.*')->selectRaw(
+            $query->selectRaw(
                 '(6371 * acos( cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)) )) as distance_km',
                 [$lat, $lng, $lat]
             );
@@ -194,7 +191,6 @@ class StoreService
                     $query->orderBy('distance_km', 'asc');
                 }
                 break;
-            case 'created_at':
             default:
                 $query->orderBy('created_at', $direction);
                 break;
