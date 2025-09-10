@@ -23,6 +23,7 @@ class Dashboard extends BaseComponent
     public ?Collection $banners;
     public ?Collection $categories;
     public Collection $storesFeatured;
+    public Collection $featuredVideos;
     public Collection $newsArticles;
     public $pressArticle;
     public Collection $handbookArticles;
@@ -54,6 +55,8 @@ class Dashboard extends BaseComponent
         $this->storesFeatured = $this->storeService->filters([
             'featured' => true
         ])->limit(8)->orderBy('sorting_order', 'asc')->get();
+
+        $this->featuredVideos = $this->storeService->getFeaturedVideos(6);
 
         $this->newsArticles = $this->articleService->getNewsArticles(5);
 

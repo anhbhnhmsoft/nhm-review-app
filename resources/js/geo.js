@@ -12,6 +12,30 @@ export const GeoPlugin = {
             return R * c;
         },
     },
+    hasStoredLocation() {
+        const lat = localStorage.getItem('userLat');
+        const lng = localStorage.getItem('userLng');
+        return lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng));
+    },
+    getStoredLocation() {
+        const lat = localStorage.getItem('userLat');
+        const lng = localStorage.getItem('userLng');
+        if (lat && lng) {
+            return {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng)
+            };
+        }
+        return null;
+    },
+    storeLocation(lat, lng) {
+        localStorage.setItem('userLat', lat.toString());
+        localStorage.setItem('userLng', lng.toString());
+    },
+    clearStoredLocation() {
+        localStorage.removeItem('userLat');
+        localStorage.removeItem('userLng');
+    },
     getCurrentLocation() {
         const defaultOptions = {
             enableHighAccuracy: true,

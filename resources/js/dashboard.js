@@ -1,5 +1,7 @@
 
 import Swiper from 'swiper/bundle';
+import { Fancybox } from '@fancyapps/ui';
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
 import 'swiper/css/bundle';
 
@@ -138,7 +140,89 @@ new Swiper('.handbook-swiper', {
     },
 });
 
+new Swiper('.featured-videos-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 16,
+    navigation: {
+        nextEl: ".featured-videos-next",
+        prevEl: ".featured-videos-prev",
+    },
+    loop: true,
+    speed: 500,
+    breakpoints: {
+        320: {
+            slidesPerView: 1,
+            spaceBetween: 16,
+        },
+        640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+    },
+});
+
 window.Swiper = Swiper;
+
+Fancybox.bind('[data-fancybox="featured-videos"]', {
+    Video: {
+        tpl: '<video class="fancybox__html5video" playsinline controls controlsList="nodownload" poster="{{poster}}">{{caption}}</video>',
+        format: '',
+        autoplay: true,
+    },
+    Toolbar: {
+        display: {
+            left: ["infobar"],
+            middle: [
+                "play",
+                "slideshow",
+                "thumbs",
+                "toggleFS",
+            ],
+            right: ["close"],
+        },
+    },
+    Thumbs: {
+        autoStart: false,
+    },
+    on: {
+        reveal: (fancybox, slide) => {
+            if (slide.type === 'video') {
+                const video = slide.$content.querySelector('video');
+                if (video) {
+                    video.play();
+                }
+            }
+        },
+    },
+});
+
+Fancybox.bind('[data-fancybox="featured-videos-mobile"]', {
+    Video: {
+        tpl: '<video class="fancybox__html5video" playsinline controls controlsList="nodownload" poster="{{poster}}">{{caption}}</video>',
+        format: '',
+        autoplay: true,
+    },
+    Toolbar: {
+        display: {
+            left: ["infobar"],
+            middle: [
+                "play",
+                "toggleFS",
+            ],
+            right: ["close"],
+        },
+    },
+    on: {
+        reveal: (fancybox, slide) => {
+            if (slide.type === 'video') {
+                const video = slide.$content.querySelector('video');
+                if (video) {
+                    video.play();
+                }
+            }
+        },
+    },
+});
 
 
 
