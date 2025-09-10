@@ -5,7 +5,7 @@
         @include('layouts.head')
         @csrf
     </head>
-    <body class="bg-white">
+    <body class="bg-white min-h-[100vh]">
         @if(!(isset($hideLayout) && $hideLayout === true))
             @include('layouts.header')
         @endif

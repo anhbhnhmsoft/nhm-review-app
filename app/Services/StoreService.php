@@ -92,7 +92,7 @@ class StoreService
         return 0;
     }
 
-    public function searchStores(array $filters = [], $sortBy = '', $lat = null, $lng = null): LengthAwarePaginator
+    public function searchStores(array $filters = [], $sortBy = '', $lat = null, $lng = null, int $limit = 10): LengthAwarePaginator
     {
         try {
             $query = $this->filters($filters);
@@ -105,7 +105,7 @@ class StoreService
                 $hasDistance
             );
 
-            $stores = $query->paginate(10);
+            $stores = $query->paginate($limit);
             foreach ($stores as $store) {
                 $this->formatListItem($store, $hasDistance);
                 $averageRating = $this->getOverallAverageRating($store);
@@ -133,6 +133,12 @@ class StoreService
 
         if (!empty($filters['id'])){
             $query->where('id', $filters['id']);
+        }
+
+        if (!empty($filters['keyword']) && !empty(trim($filters['keyword']))){
+            $keyword = trim($filters['keyword']);
+            $query->where('name', 'like', '%'.$keyword.'%')
+                ->orWhere('address', 'like', '%'.$keyword.'%');
         }
 
         if (!empty($filters['featured'])){
