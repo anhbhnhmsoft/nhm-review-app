@@ -39,6 +39,10 @@ class ArticleList extends BaseComponent
                 $this->type = ArticleType::HANDBOOK->value;
                 $this->typeName = 'Cẩm nang';
                 break;
+            case 'frontend.articles.promotion':
+                $this->type = ArticleType::PROMOTION->value;
+                $this->typeName = 'Khuyến mãi hot';
+                break;
             default:
                 $this->type = ArticleType::NEWS->value;
                 $this->typeName = 'Bài viết';

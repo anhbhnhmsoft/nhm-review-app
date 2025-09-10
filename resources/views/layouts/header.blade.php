@@ -95,7 +95,7 @@
                                 <a href="#" class="text-base font-bold ">
                                     Địa điểm uy tín
                                 </a>
-                                <a href="#" class="text-base font-bold ">
+                                <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold ">
                                     Khuyến mãi hot
                                 </a>
                                 <a href="#" class="text-base font-bold ">
@@ -121,7 +121,7 @@
             <a href="#" class="text-base font-bold text-white">
                 Địa điểm uy tín
             </a>
-            <a href="#" class="text-base font-bold text-white">
+            <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold text-white">
                 Khuyến mãi hot
             </a>
             <a href="#" class="text-base font-bold text-white">

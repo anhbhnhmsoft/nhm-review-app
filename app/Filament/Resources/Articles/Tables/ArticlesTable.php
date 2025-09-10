@@ -70,6 +70,7 @@ class ArticlesTable
                         ArticleType::FIXED->value => 'danger',
                         ArticleType::PRESS->value => 'success',
                         ArticleType::NEWS->value, ArticleType::HANDBOOK->value => 'warning',
+                        ArticleType::PROMOTION->value => 'info',
                         default => 'default',
                     })
                     ->formatStateUsing(fn($state) => ArticleType::tryFrom($state)?->label()),
