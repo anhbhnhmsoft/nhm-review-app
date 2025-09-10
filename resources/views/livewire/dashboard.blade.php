@@ -38,7 +38,7 @@
         <div class="container pad_container">
             {{--  search   --}}
             <livewire:dashboard.search-box/>
-            <div class="grid grid-cols-3 lg:grid-cols-7 gap-[40px]">
+            <div class="hidden lg:grid grid-cols-7 gap-[40px]">
             @if($categories && $categories->count() > 0)
                 @foreach($categories as $category)
                     @if($category->show_header_home_page)
@@ -51,30 +51,62 @@
                                          alt="{{$category->slug}}"
                                          class="w-14 h-14 object-contain"/>
                                 </div>
-                                    <p class="font-bold uppercase text-base text-center">
+                                <p class="font-bold uppercase text-base text-center">
                                     {{$category->name}}
                                 </p>
                             </div>
                         </a>
                     @endif
-
                     @if($loop->last)
-                        <a href="{{route('frontend.search-store')}}"
-                            class="flex items-center justify-center">
+                        <a href="{{route('frontend.search-store')}}" class="flex items-center justify-center">
                             <div class="group flex flex-col items-center justify-center gap-4 w-fit h-fit">
-                                <div
-                                    class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
-                                    <img src="{{asset('images/logo/them.svg')}}" alt="xem-them"
-                                         class="w-14 h-14 object-contain"/>
+                                <div class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
+                                    <img src="{{asset('images/logo/them.svg')}}" alt="xem-them" class="w-14 h-14 object-contain"/>
                                 </div>
-                                <p class="font-bold uppercase text-lg">
-                                    Thêm
-                                </p>
+                                <p class="font-bold uppercase text-lg">Thêm</p>
                             </div>
                         </a>
                     @endif
                 @endforeach
             @endif
+            </div>
+
+            <div class="block lg:hidden w-full">
+                <div class="swiper-container categories-swiper">
+                    <div class="swiper-wrapper">
+                        @if($categories && $categories->count() > 0)
+                            @foreach($categories as $category)
+                                @if($category->show_header_home_page)
+                                    <div class="swiper-slide">
+                                        <a href="{{route('frontend.search-store',['filters' => ['category_ids' => [$category->id]]])}}"
+                                           class="flex items-center justify-center">
+                                            <div class="group flex flex-col items-center justify-center gap-3 w-fit h-fit">
+                                                <div class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
+                                                    <img src="{{HelperFunction::generateURLImagePath($category->logo)}}"
+                                                         alt="{{$category->slug}}" class="w-12 h-12 object-contain"/>
+                                                </div>
+                                                <p class="font-bold text-sm text-center">{{$category->name}}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
+                                @if($loop->last)
+                                    <div class="swiper-slide">
+                                        <a href="{{route('frontend.search-store')}}" class="flex items-center justify-center">
+                                            <div class="group flex flex-col items-center justify-center gap-3 w-fit h-fit">
+                                                <div class="p-3 rounded-full shadow-[0_0_10px_#ccc] cursor-pointer transform transition-transform duration-300 group-hover:scale-110">
+                                                    <img src="{{asset('images/logo/them.svg')}}" alt="xem-them" class="w-12 h-12 object-contain"/>
+                                                </div>
+                                                <p class="font-bold text-sm">Thêm</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    <div class="swiper-pagination categories-pagination"></div>
+                </div>
             </div>
         </div>
     </section>
