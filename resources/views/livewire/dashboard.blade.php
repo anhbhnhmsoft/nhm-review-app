@@ -72,7 +72,7 @@
             </div>
 
             <div class="block lg:hidden w-full">
-                <div class="swiper-container categories-swiper">
+                <div class="swiper-container categories-swiper overflow-hidden">
                     <div class="swiper-wrapper">
                         @if($categories && $categories->count() > 0)
                             @foreach($categories as $category)
