@@ -47,9 +47,16 @@ class SearchStore extends BaseComponent
     public $lng = null;
     public $stores_map = [];
 
-    public function boot(StoreService $storeService, CategoryService $categoryService, ProvinceService $provinceService, UtilityService $utilityService): void
+    public function mount(): void
     {
         parent::setupBase();
+        if (request()->has('sortBy')) {
+            $this->sortBy = request()->get('sortBy');
+        }
+    }
+
+    public function boot(StoreService $storeService, CategoryService $categoryService, ProvinceService $provinceService, UtilityService $utilityService): void
+    {
         $this->storeService = $storeService;
         $this->categoryService = $categoryService;
         $this->provinceService = $provinceService;

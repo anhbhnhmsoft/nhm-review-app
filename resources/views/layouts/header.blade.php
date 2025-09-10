@@ -1,5 +1,21 @@
 @php use App\Utils\Constants\ConfigName; @endphp
-<div>
+<div x-data="{
+    async findNearby() {
+        try {
+            if ($GeoPlugin.hasStoredLocation()) {
+                window.location.href = '{{ route('frontend.search-store') }}?sortBy=distance';
+                return;
+            }
+            
+            const location = await $GeoPlugin.getCurrentLocation();
+            $GeoPlugin.storeLocation(location.lat, location.lng);
+            window.location.href = '{{ route('frontend.search-store') }}?sortBy=distance';
+            
+        } catch (error) {
+            alert('Lỗi: ' + error.message);
+        }
+    }
+}">
     <header class="bg-white d_section">
         <div class="container flex py-4 lg:py-6 justify-between items-center w-full">
             <div class="logo">
@@ -15,19 +31,15 @@
             <div class="hidden lg:flex items-center gap-4">
                 <div class="inline-flex items-center gap-4">
                     {{-- Tìm xung quanh --}}
-                    <a href="#" class="inline-flex items-center gap-2 group">
+                    <button @click="findNearby()" class="inline-flex items-center gap-2 group">
                         <i class="fa-solid fa-location-dot text-blue-500 text-xl group-hover:animate-bounce"></i>
-                        <span
-                            class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-blue-500">Tìm
-                            xung quanh</span>
-                    </a>
+                        <span class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-blue-500">Tìm xung quanh</span>
+                    </button>
                     {{-- Thông báo --}}
-                    <a href="#" class="inline-flex items-center gap-2 group">
+                    {{-- <a href="#" class="inline-flex items-center gap-2 group">
                         <i class="fa-solid fa-bell text-red-500 text-xl group-hover:animate-bounce"></i>
-                        <span
-                            class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-red-500">Thông
-                            báo</span>
-                    </a>
+                        <span class="uppercase font-bold text-base transition-colors duration-300 group-hover:text-red-500">Thông báo</span>
+                    </a> --}}
                 </div>
                 <div class="inline-flex items-center gap-2">
                     <a href="#" class="btn btn-primary-green text-white text-base w-64 font-medium rounded-lg">
@@ -130,6 +142,10 @@
 
                                 <a href="{{ route('frontend.profile') }}" class="text-base font-bold ">Đã lưu</a>
 
+                                <button @click="findNearby()" class="text-base font-bold text-left flex items-center gap-2">
+                                    <i class="fa-solid fa-location-dot text-blue-500"></i>
+                                    Tìm xung quanh
+                                </button>
                                 <a href="#" class="text-base font-bold ">
                                     Mới nhất
                                 </a>
@@ -139,9 +155,9 @@
                                 <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold ">
                                     Khuyến mãi hot
                                 </a>
-                                <a href="#" class="text-base font-bold ">
+                                {{-- <a href="#" class="text-base font-bold ">
                                     Video
-                                </a>
+                                </a> --}}
                                 <a href="{{ route('frontend.news') }}" class="text-base font-bold ">
                                     Tin tức & Cẩm nang
                                 </a>
@@ -165,9 +181,9 @@
             <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold text-white">
                 Khuyến mãi hot
             </a>
-            <a href="#" class="text-base font-bold text-white">
+            {{-- <a href="#" class="text-base font-bold text-white">
                 Video
-            </a>
+            </a> --}}
             <a href="{{ route('frontend.news') }}" class="text-base font-bold text-white">
                 Tin tức & Cẩm nang
             </a>
