@@ -196,7 +196,6 @@ class StoreService
         }
         return false;
     }
-
     public function sortBy(Builder $query, string $sortBy, string $direction = 'desc', bool $hasDistance = false)
     {
         switch ($sortBy) {

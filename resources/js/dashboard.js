@@ -65,6 +65,33 @@ new Swiper('.store__category', {
     }
 });
 
+new Swiper('.categories-swiper', {
+    slidesPerView: 4,
+    spaceBetween: 16,
+    grid: {
+        rows: 2,
+        fill: 'row'
+    },
+    pagination: {
+        el: '.categories-pagination',
+        clickable: true,
+    },
+    breakpoints: {
+        320: {
+            slidesPerView: 3,
+            spaceBetween: 12,
+        },
+        480: {
+            slidesPerView: 4,
+            spaceBetween: 12,
+        },
+        640: {
+            slidesPerView: 5,
+            spaceBetween: 16,
+        },
+    }
+});
+
 new Swiper('.other-articles-swiper', {
     slidesPerView: 'auto',
     spaceBetween: 24,

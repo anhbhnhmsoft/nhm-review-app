@@ -146,12 +146,12 @@
                                     <i class="fa-solid fa-location-dot text-blue-500"></i>
                                     Tìm xung quanh
                                 </button>
-                                <a href="#" class="text-base font-bold ">
+                                <a href="{{ route('frontend.search-store', ['sortBy' => '']) }}" class="text-base font-bold ">
                                     Mới nhất
                                 </a>
-                                <a href="#" class="text-base font-bold ">
+                                <a href="{{ route('frontend.search-store', ['sortBy' => 'rating']) }}" class="text-base font-bold ">
                                     Địa điểm uy tín
-                                </a>
+                                </a>    
                                 <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold ">
                                     Khuyến mãi hot
                                 </a>
@@ -165,17 +165,16 @@
                         </div>
                     </aside>
                 </div>
-
             </div>
         </div>
     </header>
 
     <div class="hidden lg:flex items-center justify-center bg-[#52ab5c]">
         <nav class="container !flex items-center justify-between gap-4 py-4">
-            <a href="#" class="text-base font-bold text-white">
+            <a href="{{ route('frontend.search-store', ['sortBy' => '']) }}" class="text-base font-bold text-white">
                 Mới nhất
             </a>
-            <a href="#" class="text-base font-bold text-white">
+            <a href="{{ route('frontend.search-store', ['sortBy' => 'rating']) }}" class="text-base font-bold text-white">
                 Địa điểm uy tín
             </a>
             <a href="{{ route('frontend.articles.promotion') }}" class="text-base font-bold text-white">
