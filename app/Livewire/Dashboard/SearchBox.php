@@ -21,8 +21,10 @@ class SearchBox extends Component
 
     public function render()
     {
+        $sortBy = ($this->search === '' && $this->lat && $this->lng) ? 'distance' : '';
         $stores = $this->storeService->searchStores(
             filters: ['keyword' => trim($this->search)],
+            sortBy: $sortBy,
             lat: $this->lat,
             lng: $this->lng,
             limit: 5

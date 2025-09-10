@@ -42,7 +42,7 @@
                     </a> --}}
                 </div>
                 <div class="inline-flex items-center gap-2">
-                    <a href="#" class="btn btn-primary-green text-white text-base w-64 font-medium rounded-lg">
+                    <a href="{{ route('frontend.search-store') }}" class="btn btn-primary-green text-white text-base w-64 font-medium rounded-lg">
                         Viết Review
                     </a>
                     @if (auth('web')->check())
