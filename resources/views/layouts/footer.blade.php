@@ -1,6 +1,6 @@
 @php use App\Utils\Constants\ConfigName; @endphp
 <div class="bg-white w-full h-full">
-    <div class="relative mt-32 md:mt-56 lg:mt-56 xl:mt-64 2xl:mt-72 3xl:mt-80 bg-white pt-24">
+    <div class="relative mt-32 md:mt-56 lg:mt-56 xl:mt-64 2xl:mt-72 3xl:mt-80 bg-white">
         <img src="{{asset('images/bg-footer.webp')}}" alt="Background Footer"
              class="absolute -top-20 z-0 h-auto w-full md:-top-32 xl:-top-44 2xl:-top-48 3xl:-top-60 4xl:top-[-19rem] bg-white">
         <div class="bg-[#0257ff]">
@@ -82,7 +82,6 @@
                                             </span>
                                     </a>
                                 @endif
-
                             </ul>
                         </div>
                     </div>

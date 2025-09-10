@@ -41,9 +41,14 @@ class FormReview extends Component
     #[On('open-modal')]
     public function open($store_id = null)
     {
-        $this->store_id = $store_id;
-        $this->isOpen = true;
-        $this->resetForm();
+        if (auth()->guard('web')->check()){
+            $this->store_id = $store_id;
+            $this->isOpen = true;
+            $this->resetForm();
+        }else{
+            redirect()->route('frontend.login');
+        }
+
     }
 
     public function close()
