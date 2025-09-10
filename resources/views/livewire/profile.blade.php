@@ -1,14 +1,21 @@
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    @php
+        $ratingLabel = [
+            'rating_location' => 'Vị trí',
+            'rating_space' => 'Không gian',
+            'rating_quality' => 'Chất lượng',
+            'rating_serve' => 'Phục vụ',
+        ];
+    @endphp
     <header class="bg-gradient-to-b from-[#c8e4cc] to-[#fafafa] rounded-b-2xl h-64 relative overflow-hidden">
         <div class="absolute inset-x-0 bottom-0 flex justify-center pb-6">
             <div class="relative" wire:key="avatar-{{ $user->id }}-{{ $user->updated_at }}">
-                <img data-open-avatar-modal
-                    src="{{ \App\Utils\HelperFunction::generateURLImagePath($user->avatar_path) }}"
-                    onerror="this.src='{{ asset('images/avatar.png') }}'"
+                <img src="{{ \App\Utils\HelperFunction::generateURLImagePath($user->avatar_path) }}"
+                    onerror="this.src='{{ asset('images/avatar.png') }}'" onclick="avatar_upload.showModal()"
                     class="w-44 h-44 sm:w-48 sm:h-48 p-2 cursor-pointer bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
                     alt="Avatar" />
 
-                <button data-open-avatar-modal
+                <button onclick="avatar_upload.showModal()"
                     class="absolute bottom-4 right-4 w-12 h-12 bg-primary text-white rounded-full shadow-lg hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center"
                     aria-label="Cập nhật ảnh đại diện">
                     <i class="fa-solid fa-camera text-lg"></i>
@@ -24,22 +31,29 @@
 
         <div class="flex justify-center">
             <div class="bg-white rounded-lg p-1 shadow-sm">
-                <button
-                    class="tab-btn active px-6 py-2 text-lg cursor-pointer font-semibold rounded-md transition-all duration-200 bg-amber-600 text-white">
+                <a href="#reviews"
+                    class="tab-btn px-6 py-2 text-lg cursor-pointer font-semibold rounded-md transition-all duration-200"
+                    data-tab="reviews">
                     Đánh giá
-                </button>
-                <button
-                    class="tab-btn px-6 py-2 text-lg cursor-pointer font-semibold rounded-md transition-all duration-200">
-                    <a href="http://" target="_blank" rel="noopener noreferrer">Đã lưu</a>
-                </button>
+                </a>
+                <a href="#saved"
+                    class="tab-btn px-6 py-2 text-lg cursor-pointer font-semibold rounded-md transition-all duration-200"
+                    data-tab="saved">
+                    Đã lưu
+                </a>
             </div>
+        </div>
+
+        <div class="lg:hidden text-center">
+            <button onclick="update_info_modal.showModal()" class="btn bg-blue-600 text-white">Cập nhật
+                thông tin</button>
         </div>
     </section>
 
     <!-- Main Content -->
     <main class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Profile Information -->
-        <aside class="lg:col-span-1">
+        <aside class="hidden lg:block lg:col-span-1">
             <div class="bg-white shadow-sm rounded-2xl p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-6 text-center">
                     Thông tin cá nhân
@@ -132,52 +146,54 @@
                                 </header>
 
                                 <div class="flex flex-wrap gap-4 text-sm">
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-gray-600">Vị trí:</span>
-                                        <div class="flex">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($review->rating_location >= $i)
-                                                    <i class="fas fa-star text-yellow-400"></i>
-                                                @else
-                                                    <i class="far fa-star text-gray-300"></i>
-                                                @endif
-                                            @endfor
+                                    <div class="relative inline-block group">
+                                        <div
+                                            class="size-8 rounded-full bg-green-600 flex items-center justify-center text-xs text-white">
+                                            <b>
+                                                {{ \App\Utils\HelperFunction::avgRatingReview(
+                                                    location: $review->rating_location,
+                                                    space: $review->rating_space,
+                                                    quality: $review->rating_quality,
+                                                    serve: $review->rating_serve,
+                                                ) }}
+                                            </b>
                                         </div>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-gray-600">Không gian:</span>
-                                        <div class="flex">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($review->rating_space >= $i)
-                                                    <i class="fas fa-star text-yellow-400"></i>
-                                                @else
-                                                    <i class="far fa-star text-gray-300"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-gray-600">Chất lượng:</span>
-                                        <div class="flex">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($review->rating_quality >= $i)
-                                                    <i class="fas fa-star text-yellow-400"></i>
-                                                @else
-                                                    <i class="far fa-star text-gray-300"></i>
-                                                @endif
-                                            @endfor
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-gray-600">Phục vụ:</span>
-                                        <div class="flex">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($review->rating_serve >= $i)
-                                                    <i class="fas fa-star text-yellow-400"></i>
-                                                @else
-                                                    <i class="far fa-star text-gray-300"></i>
-                                                @endif
-                                            @endfor
+
+                                        <!-- Popover -->
+                                        <div class="absolute left-1/2 bottom-10 mt-2 -translate-x-1/2
+                                           w-56 rounded-xl bg-white shadow-lg
+                                           z-10
+                                           p-3 text-sm
+                                           opacity-0 scale-95 pointer-events-none
+                                           transition duration-150 ease-out
+                                           group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto"
+                                            role="tooltip">
+                                            <div class="flex flex-col gap-2">
+                                                <div class="flex flex-col">
+                                                    @foreach ($ratingLabel as $field => $label)
+                                                        <div class="flex items-center gap-2 mb-2">
+                                                            <span
+                                                                class="w-24 text-sm text-gray-600">{{ $label }}:</span>
+                                                            <div class="rating rating-sm">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    <input type="radio" disabled
+                                                                        class="mask mask-star-2 bg-green-600"
+                                                                        value="{{ $i }}"
+                                                                        {{ $review->$field == $i ? 'checked' : '' }} />
+                                                                @endfor
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <!-- Mũi tên -->
+                                            <div
+                                                class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0
+                                                border-l-8 border-l-transparent
+                                                border-r-8 border-r-transparent
+                                                border-t-8 border-b-white">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -208,21 +224,29 @@
                 </div>
             @endif
 
-            <div class="text-center py-12 text-gray-500 hidden" id="no-reviews">
+            <div class="text-center py-12 text-gray-500" id="no-reviews">
                 <i class="fas fa-comment-slash text-4xl mb-4"></i>
                 <p class="text-lg">Chưa có đánh giá nào</p>
             </div>
         </section>
 
-        <section class="lg:col-span-2 space-y-4 hidden" id="saved-content">
-            <div class="text-center py-12 text-gray-500">
-                <i class="fas fa-bookmark text-4xl mb-4"></i>
-                <p class="text-lg">Chưa có nội dung đã lưu</p>
-            </div>
+        <section class="lg:col-span-2 space-y-4 " id="saved-content">
+            @if ($storesSaved)
+                @foreach ($storesSaved as $store)
+                    <div wire:key="store-{{ $store->id . time() }}">
+                        <livewire:search-store.card-store :store="$store" :key="$store->id . time()" />
+                    </div>
+                @endforeach
+            @else
+                <div class="text-center py-12 text-gray-500">
+                    <i class="fas fa-bookmark text-4xl mb-4"></i>
+                    <p class="text-lg">Chưa có nội dung đã lưu</p>
+                </div>
+            @endif
         </section>
     </main>
-    <dialog id="avatar_upload" class="modal modal-bottom sm:modal-middle" wire:ignore.self>
-        <div class="modal-box">
+    <dialog id="avatar_upload" class="modal modal-bottom sm:modal-middle " wire:ignore.self>
+        <div class="modal-box bg-white">
             <h3 class="text-lg font-bold mb-4">Cập nhật ảnh đại diện</h3>
 
             <div class="space-y-4">
@@ -273,7 +297,7 @@
 
             <div class="modal-action">
                 <button wire:click="uploadAvatar" wire:loading.attr="disabled" wire:target="uploadAvatar"
-                    class="btn btn-primary" @disabled(!$avatar_ready)>
+                    class="btn bg-blue-600 text-white" @disabled(!$avatar_ready)>
                     <span wire:loading.remove wire:target="uploadAvatar">Cập nhật</span>
                     <span wire:loading wire:target="uploadAvatar" class="loading loading-spinner loading-sm"></span>
                 </button>
@@ -282,6 +306,65 @@
                     <button class="btn">Hủy</button>
                 </form>
             </div>
+        </div>
+    </dialog>
+    <dialog id="update_info_modal" class="modal modal-bottom sm:modal-middle lg:hidden" wire:ignore.self>
+        <div class="modal-box bg-white">
+            <h2 class="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
+            <form wire:submit.prevent="update" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Họ tên
+                    </label>
+                    <input wire:model="name" type="text" value="Nguyễn Văn A"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors">
+                </div>
+                @error('name')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <input type="email" wire:model="email" disabled
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Địa chỉ
+                    </label>
+                    <input type="text" wire:model="address"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500">
+                </div>
+                @error('address')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Số điện thoại
+                    </label>
+                    <input type="text" wire:model="phone"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500">
+                </div>
+                @error('phone')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Giới thiệu
+                    </label>
+                    <textarea type="text" wire:model="introduce"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-gray-50 text-gray-500"> </textarea>
+                </div>
+                @error('introduce')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+                <button type="submit" class="btn bg-blue-600 w-full text-white">Cập nhật</button>
+            </form>
+            <form method="dialog" class="modal-action">
+                <button class="btn">Đóng</button>
+            </form>
         </div>
     </dialog>
     <script>
@@ -331,23 +414,39 @@
                 }));
             }, false);
 
-            document.addEventListener('click', e => {
-                const openBtn = e.target.closest('[data-open-avatar-modal]');
-                if (openBtn) {
-                    const dlg = document.getElementById('avatar_upload');
-                    if (dlg) {
-                        try {
-                            dlg.showModal();
-                        } catch (err) {}
-                    }
-                }
-            });
-
             Livewire.on('avatarUploaded', () => {
                 const dlg = document.getElementById('avatar_upload');
                 if (dlg && typeof dlg.close === 'function') {
                     dlg.close();
                 }
+            });
+
+            function showTab(tab) {
+                const reviews = document.getElementById('reviews-content');
+                const saved = document.getElementById('saved-content');
+                const tabs = document.querySelectorAll('.tab-btn');
+
+                reviews.classList.add('hidden');
+                saved.classList.add('hidden');
+                tabs.forEach(t => t.classList.remove('bg-green-600', 'text-white', 'active'));
+
+                if (tab === 'saved') {
+                    saved.classList.remove('hidden');
+                    document.querySelector('[data-tab="saved"]').classList.add('bg-green-600',
+                        'text-white', 'active');
+                } else {
+                    reviews.classList.remove('hidden');
+                    document.querySelector('[data-tab="reviews"]').classList.add('bg-green-600',
+                        'text-white', 'active');
+                }
+            }
+
+            // Khi load trang
+            showTab(location.hash.replace('#', '') || 'reviews');
+
+            // Khi click link tab
+            window.addEventListener('hashchange', () => {
+                showTab(location.hash.replace('#', '') || 'reviews');
             });
         });
     </script>

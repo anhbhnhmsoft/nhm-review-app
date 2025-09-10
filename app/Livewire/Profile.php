@@ -118,8 +118,10 @@ class Profile extends BaseComponent
             ->with(['store', 'reviewImages'])
             ->latest()
             ->paginate(5);
+        $storesSaved = $this->user->stores;
         return $this->view('livewire.profile', [
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'storesSaved' => $storesSaved
         ], []);
     }
 }
