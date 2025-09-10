@@ -40,6 +40,8 @@ class SearchStore extends BaseComponent
     public $wards = [];
 
     public $utilities = [];
+
+    #[Url(history: true)]
     public $sortBy = '';
 
     public $lat = null;
@@ -47,16 +49,9 @@ class SearchStore extends BaseComponent
     public $lng = null;
     public $stores_map = [];
 
-    public function mount(): void
-    {
-        parent::setupBase();
-        if (request()->has('sortBy')) {
-            $this->sortBy = request()->get('sortBy');
-        }
-    }
-
     public function boot(StoreService $storeService, CategoryService $categoryService, ProvinceService $provinceService, UtilityService $utilityService): void
     {
+        parent::setupBase();
         $this->storeService = $storeService;
         $this->categoryService = $categoryService;
         $this->provinceService = $provinceService;
