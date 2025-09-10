@@ -12,6 +12,8 @@ enum ArticleType: int
 
     case HANDBOOK = 3;
 
+    case PROMOTION = 4;
+
 
     public function label(): string
     {
@@ -20,6 +22,7 @@ enum ArticleType: int
             self::PRESS => 'Báo chí',
             self::NEWS => 'Tin tức',
             self::HANDBOOK => 'Cẩm nang',
+            self::PROMOTION => 'Khuyến mãi hot',
         };
     }
 
