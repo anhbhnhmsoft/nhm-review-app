@@ -6,6 +6,14 @@
         lng: @entangle('lng').live,
         async getLoc(){
           try {
+            if ($GeoPlugin.hasStoredLocation()) {
+              const stored = $GeoPlugin.getStoredLocation();
+              this.lat = stored.lat;
+              this.lng = stored.lng;
+              $GeoPlugin.clearStoredLocation();
+              return;
+            }
+            
             const p = await $GeoPlugin.getCurrentLocation()
             this.lat = p.lat
             this.lng = p.lng
@@ -15,7 +23,6 @@
         }
     }"
      x-init="getLoc()"
-     x-effect="getLoc()"
 >
     @section('vite_includes')
         @vite(['resources/css/map.css'])

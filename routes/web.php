@@ -27,6 +27,7 @@ Route::get('/tin-tuc/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.
 Route::get('/bao-chi/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.press');
 Route::get('/cam-nang/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.handbook');
 Route::get('/khuyen-mai-hot/tat-ca', \App\Livewire\ArticleList::class)->name('frontend.articles.promotion');
+Route::get('/ca-nhan', \App\Livewire\Profile::class )->name('frontend.profile');
 
 Route::prefix('common')->group(function () {
     Route::get('/google-map', [CommonController::class, 'getKeyGoogleMap']);

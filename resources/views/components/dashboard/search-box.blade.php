@@ -9,7 +9,7 @@
         />
         <button class="btn text-white bg-blue-600 hover:bg-blue-700 rounded-lg lg:px-[25px] lg:py-[23px] ">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <span class="text-base hidden lg:inline"> Khu vực</span>
+            <span class="text-base hidden lg:inline"> Tìm kiếm</span>
         </button>
         <a href="{{ route('frontend.search-store') }}"
            class="btn text-white bg-green-600 hover:bg-green-700 rounded-lg px-[25px] py-[23px] hidden lg:flex">

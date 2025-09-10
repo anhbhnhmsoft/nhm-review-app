@@ -1,9 +1,7 @@
 @php use App\Utils\Constants\ConfigName; @endphp
-<div class="bg-white w-full h-full">
-    <div class="relative mt-32 md:mt-56 lg:mt-56 xl:mt-64 2xl:mt-72 3xl:mt-80 bg-white">
-        <img src="{{asset('images/bg-footer.webp')}}" alt="Background Footer"
-             class="absolute -top-20 z-0 h-auto w-full md:-top-32 xl:-top-44 2xl:-top-48 3xl:-top-60 4xl:top-[-19rem] bg-white">
-        <div class="bg-[#0257ff]">
+<div class="w-full h-full">
+    <div class="relative bg-transparent z-[5] @if (request()->routeIs('dashboard')) mt-[-200px] lg:mt-[-176px] @endif bg-cover bg-position-[center_top] pt-12" style="background-image: url('{{asset('images/bg-footer.png')}}')">
+        <div class="mt-40">
             <div class="relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-2 gap-0 md:col-span-3 lg:grid-cols-6">
                     <div class="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
