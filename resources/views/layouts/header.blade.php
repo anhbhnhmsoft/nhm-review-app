@@ -57,11 +57,11 @@
                             <ul tabindex="0"
                                 class="menu menu-md dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow">
                                 <li>
-                                    <a class="justify-between" href="{{ route('frontend.profile') }}">
+                                    <a class="justify-between" href="{{ route('frontend.profile') }}#review">
                                         Đánh giá của tôi
                                     </a>
                                 </li>
-                                <li><a>Địa điểm đã lưu</a></li>
+                                <li><a href="{{ route('frontend.profile') }}#review">Địa điểm đã lưu</a></li>
                                 <li><a href="{{ route('frontend.logout') }}">Đăng xuất</a></li>
                             </ul>
                         </div>
@@ -138,9 +138,9 @@
                         <div class="h-[calc(100vh-57px)] overflow-y-auto p-4">
                             <nav class="flex flex-col gap-4 py-4">
 
-                                <a href="{{ route('frontend.profile') }}" class="text-base font-bold ">Đánh giá</a>
+                                <a href="{{ route('frontend.profile') }}#review" class="text-base font-bold ">Đánh giá</a>
 
-                                <a href="{{ route('frontend.profile') }}" class="text-base font-bold ">Đã lưu</a>
+                                <a href="{{ route('frontend.profile') }}#saved" class="text-base font-bold ">Đã lưu</a>
 
                                 <button @click="findNearby()" class="text-base font-bold text-left flex items-center gap-2">
                                     <i class="fa-solid fa-location-dot text-blue-500"></i>
