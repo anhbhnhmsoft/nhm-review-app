@@ -61,7 +61,7 @@
                                         Đánh giá của tôi
                                     </a>
                                 </li>
-                                <li><a href="{{ route('frontend.profile') }}#review">Địa điểm đã lưu</a></li>
+                                <li><a href="{{ route('frontend.profile') }}#saved">Địa điểm đã lưu</a></li>
                                 <li><a href="{{ route('frontend.logout') }}">Đăng xuất</a></li>
                             </ul>
                         </div>
