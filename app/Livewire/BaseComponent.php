@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
 class BaseComponent extends Component
 {
     protected ConfigService $configService;
-    protected array $configs;
+    public array $configs;
 
     private function sharedLayoutData()
     {

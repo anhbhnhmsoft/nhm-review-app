@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\BannerService;
+use App\Services\BookingService;
 use App\Services\CategoryService;
 use App\Services\ConfigService;
 use App\Services\ProvinceService;
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ReviewService::class, fn() => new ReviewService());
         $this->app->singleton(ConfigService::class, fn() => new ConfigService());
         $this->app->singleton(ArticleService::class, fn() => new ArticleService());
+        $this->app->singleton(BookingService::class, fn() => new BookingService());
 
     }
 

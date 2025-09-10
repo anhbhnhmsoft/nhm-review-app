@@ -322,11 +322,14 @@
                         <div class="flex items-center justify-between gap-4 mb-2">
                             <h1 class="card-title capitalize font-bold text-lg mt-2">Đánh giá <span
                                     class="text-gray-400">({{$store->reviews_count}})</span></h1>
-                            <button class="btn btn-primary-green btn-sm rounded-xl"
-                                    wire:click="$dispatchTo('store.form-review','open-modal', { store_id: '{{ $store->id }}' })"
-                            >
-                                Viết đánh giá
-                            </button>
+                            <div class="flex items-center gap-2">
+                                <livewire:store.booking-form :store_id="$store->id" />
+                                <button class="btn btn-primary-green btn-sm rounded-xl"
+                                        wire:click="$dispatchTo('store.form-review','open-modal', { store_id: '{{ $store->id }}' })"
+                                >
+                                    Viết đánh giá
+                                </button>
+                            </div>
                         </div>
                         <div
                             class="flex items-center gap-8 h-44 p-4 relative rounded-2xl bg-gradient-to-r from-[#52ab5c] to-[#c8e4cc] ">
