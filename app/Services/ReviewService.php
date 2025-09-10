@@ -28,7 +28,7 @@ class ReviewService
         try {
             $review = Review::query()->create([
                 'store_id' => $data['store_id'],
-                'user_id' => auth()->id(),
+                'user_id' => auth()->guard('web')->id(),
                 'rating_location' => $data['rating_location'],
                 'rating_space' => $data['rating_space'],
                 'rating_quality' => $data['rating_quality'],
