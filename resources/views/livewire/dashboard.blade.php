@@ -728,7 +728,7 @@
         </div>
     </section>
 
-    <section class="d_section relative">
+    <section class="d_section relative pb-[200px]">
         <div class="absolute inset-0 z-1 w-full h-full">
             <img src="{{asset('images/bg_booking.jpg')}}" class=" w-full h-full object-cover" alt="Backgroud booking">
         </div>

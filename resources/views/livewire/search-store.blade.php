@@ -23,7 +23,6 @@
         }
     }"
      x-init="getLoc()"
-     x-effect="getLoc()"
 >
     @section('vite_includes')
         @vite(['resources/css/map.css'])
