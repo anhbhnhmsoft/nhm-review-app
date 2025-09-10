@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Stores\Tables;
 use App\Models\Category;
 use App\Utils\Constants\CategoryStatus;
 use App\Utils\Constants\StoreStatus;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use App\Filament\Resources\Reviews\ReviewResource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -108,6 +110,12 @@ class StoresTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('reviews')
+                    ->label('Đánh giá')
+                    ->icon('heroicon-m-star')
+                    ->color('warning')
+                    ->url(fn($record) => ReviewResource::getUrl('index', ['store_id' => $record->id]))
+                    ->openUrlInNewTab(false),
                 DeleteAction::make()->visible(),
             ]);
     }
