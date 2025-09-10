@@ -252,8 +252,7 @@ class StoreService
             })
             ->with(['storeFiles' => function ($query) {
                 $query->where('file_type', 'video/mp4')
-                    ->orderBy('created_at', 'asc')
-                    ->limit(1);
+                    ->orderBy('created_at', 'asc');
             }])
             ->whereIn('status', [StoreStatus::ACTIVE->value, StoreStatus::PENDING->value])
             ->orderBy('sorting_order', 'asc')
