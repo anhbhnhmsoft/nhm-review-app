@@ -20,7 +20,6 @@ class Profile extends BaseComponent
     public $avatar;
     public $avatar_preview;
     public $avatar_ready = false;
-    public $reviews;
     protected $paginationTheme = 'tailwind';
     public User $user;
     protected array $rules = [
@@ -38,16 +37,10 @@ class Profile extends BaseComponent
         $this->address = $this->user->address;
         $this->phone = $this->user->phone;
         $this->introduce = $this->user->introduce;
-        $reviews = $this->user
-            ->reviews()
-            ->with(['store', 'reviewImages'])
-            ->latest()
-            ->paginate(5);
     }
 
     public function boot()
     {
-
         parent::setupBase();
     }
 
@@ -75,7 +68,7 @@ class Profile extends BaseComponent
     public function uploadAvatar()
     {
         $this->validate([
-            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:20480',
         ]);
 
         if (! $this->avatar) {
@@ -84,16 +77,13 @@ class Profile extends BaseComponent
         }
 
         try {
-            // xóa avatar cũ nếu có
             if ($this->user->avatar_path && Storage::disk('public')->exists($this->user->avatar_path)) {
                 Storage::disk('public')->delete($this->user->avatar_path);
             }
 
-            // lưu file (bạn có thể resize trước khi lưu nếu muốn)
             $filename = 'avatar_' . $this->user->id . '_' . time() . '.' . $this->avatar->getClientOriginalExtension();
             $path = $this->avatar->storeAs('avatars', $filename, 'public');
 
-            // update DB và tải lại model user để view cập nhật
             $this->user->update(['avatar_path' => $path]);
             $this->user->refresh();
 
@@ -109,7 +99,6 @@ class Profile extends BaseComponent
 
     public function updatedAvatar()
     {
-        // validate khi mới chọn file
         $this->validateOnly('avatar');
 
         $this->avatar_preview = $this->avatar->temporaryUrl();
@@ -124,6 +113,13 @@ class Profile extends BaseComponent
 
     public function render()
     {
-        return $this->view('livewire.profile', [], []);
+        $reviews = $this->user
+            ->reviews()
+            ->with(['store', 'reviewImages'])
+            ->latest()
+            ->paginate(5);
+        return $this->view('livewire.profile', [
+            'reviews' => $reviews
+        ], []);
     }
 }
