@@ -166,9 +166,7 @@
                             địa điểm này</p>
                     </div>
                     <h6 class="text-lg text-gray-500 font-medium mb-4">Ảnh đính kèm</h6>
-                    <div wire:ignore>
-                        <input type="file" multiple name="review_files[]" id="review_files">
-                    </div>
+                     
                     @error('review_files')
                         <div class="text-red-500 text-sm mt-1 italic">{{ $message }}</div>
                     @enderror
