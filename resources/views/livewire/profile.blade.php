@@ -222,16 +222,18 @@
                 <div class="mt-6">
                     {{ $reviews->links() }}
                 </div>
+            @else
+                <div class="text-center py-12 text-gray-500" id="no-reviews">
+                    <i class="fas fa-comment-slash text-4xl mb-4"></i>
+                    <p class="text-lg">Chưa có đánh giá nào</p>
+                </div>
             @endif
 
-            <div class="text-center py-12 text-gray-500" id="no-reviews">
-                <i class="fas fa-comment-slash text-4xl mb-4"></i>
-                <p class="text-lg">Chưa có đánh giá nào</p>
-            </div>
+
         </section>
 
         <section class="lg:col-span-2 space-y-4 " id="saved-content">
-            @if ($storesSaved)
+            @if (count($storesSaved) > 0)
                 @foreach ($storesSaved as $store)
                     <div wire:key="store-{{ $store->id . time() }}">
                         <livewire:search-store.card-store :store="$store" :key="$store->id . time()" />
@@ -243,6 +245,7 @@
                     <p class="text-lg">Chưa có nội dung đã lưu</p>
                 </div>
             @endif
+
         </section>
     </main>
     <dialog id="avatar_upload" class="modal modal-bottom sm:modal-middle " wire:ignore.self>
