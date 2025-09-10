@@ -20,10 +20,11 @@
                x-on:click.away="openSearch = false"
                wire:model.live.debounce.300ms="search"
         />
-        <button class="btn text-white bg-blue-600 hover:bg-blue-700 rounded-lg lg:px-[25px] lg:py-[23px] ">
+        <a href="{{ route('frontend.search-store', ['filters' => ['keyword' => trim($search ?? '')], 'sortBy' => ($search ?? '') === '' ? 'distance' : null, 'lat' => $lat, 'lng' => $lng]) }}"
+           class="btn text-white bg-blue-600 hover:bg-blue-700 rounded-lg lg:px-[25px] lg:py-[23px] ">
             <i class="fa-solid fa-magnifying-glass"></i>
             <span class="text-base hidden lg:inline"> Tìm kiếm</span>
-        </button>
+        </a>
         <a href="{{ route('frontend.search-store') }}"
            class="btn text-white bg-green-600 hover:bg-green-700 rounded-lg px-[25px] py-[23px] hidden lg:flex">
             <span class="text-base">Tìm địa điểm</span>
