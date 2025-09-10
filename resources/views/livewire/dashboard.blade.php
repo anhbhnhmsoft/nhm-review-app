@@ -471,7 +471,7 @@
                 <div class="hidden lg:grid grid-cols-12 grid-rows-2 gap-2.5 auto-cols-auto">
                     @foreach($featuredVideos as $index => $store)
                         @php
-                            $video = $store->storeFiles->first();
+                            $video = $store->storeFiles->where('file_type','video/mp4')->sortBy('created_at')->first();
                             $colSpan = match($index) {
                                 0, 2 => 'col-span-3 row-span-2',
                                 default => 'col-span-3 row-span-1'
@@ -527,7 +527,7 @@
                         <div class="swiper-wrapper py-4 !w-full !h-fit">
                             @foreach($featuredVideos as $store)
                                 @php
-                                    $video = $store->storeFiles->first();
+                                    $video = $store->storeFiles->where('file_type','video/mp4')->sortBy('created_at')->first();
                                 @endphp
                                 @if($video)
                                     <div class="swiper-slide !h-fit">
