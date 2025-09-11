@@ -21,10 +21,6 @@ class EditUser extends EditRecord
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),
-            Actions\ViewAction::make()
-                ->label('Xem chi tiết'),
-            Actions\DeleteAction::make()
-                ->label('Xóa'),
         ];
     }
 
