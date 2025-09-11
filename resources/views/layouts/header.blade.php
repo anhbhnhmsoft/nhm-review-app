@@ -65,7 +65,7 @@
                                     </a>
                                 </li>
                                 <li><a href="{{ route('frontend.profile') }}#saved">Địa điểm đã lưu</a></li>
-
+                                <li><a href="{{ route('frontend.logout') }}" class="text-red-600">Đăng xuất</a></li>
                             </ul>
                         </div>
                     @else
