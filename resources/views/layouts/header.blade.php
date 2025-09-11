@@ -65,7 +65,7 @@
                                     </a>
                                 </li>
                                 <li><a href="{{ route('frontend.profile') }}#saved">Địa điểm đã lưu</a></li>
-
+                                <li><a href="{{ route('frontend.logout') }}" class="text-red-600">Đăng xuất</a></li>
                             </ul>
                         </div>
                     @else
@@ -111,7 +111,6 @@
                                 </div>
 
                                 {{-- Nút đăng xuất --}}
-
                             @else
                                 <a href="{{ route('frontend.login') }}" class="btn btn-primary-green">
                                     Đăng nhập
@@ -159,13 +158,15 @@
                                 <a href="{{ route('frontend.news') }}" class="text-base font-bold ">
                                     Tin tức & Cẩm nang
                                 </a>
-                                <form method="GET" action="{{ route('frontend.logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition">
-                                        Đăng xuất
-                                    </button>
-                                </form>
+                                @if (auth('web')->check())
+                                    <form method="GET" action="{{ route('frontend.logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 transition">
+                                            Đăng xuất
+                                        </button>
+                                    </form>
+                                @endif
                             </nav>
                         </div>
                     </aside>
