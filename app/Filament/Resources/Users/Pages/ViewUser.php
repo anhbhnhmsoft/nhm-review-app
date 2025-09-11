@@ -14,7 +14,6 @@ class ViewUser extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
             Actions\EditAction::make()
             ->label('Chỉnh sửa'),
         ];

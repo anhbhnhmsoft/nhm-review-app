@@ -44,7 +44,6 @@ new Swiper('#banner__ads', {
     },
 });
 
-
 new Swiper('.store__category', {
     // Bật Auto Scroll
     slidesPerView: 1,
