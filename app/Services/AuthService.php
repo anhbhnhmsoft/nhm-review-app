@@ -40,7 +40,7 @@ class AuthService
                 'role'     => UserRole::USER,
             ]);
             event(new Registered($user));
-            $this->sendEmailVerificationNotification($user);
+            // $this->sendEmailVerificationNotification($user);
             DB::commit();
             return $user;
         } catch (\Exception $e) {
