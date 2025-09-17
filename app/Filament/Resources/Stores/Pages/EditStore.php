@@ -38,6 +38,11 @@ class EditStore extends EditRecord
             'address' => $data['address']
         ];
         $data['store_location'] = json_encode($location);
+        
+        if ($store->logo_path) {
+            $data['logo_path'] = $store->logo_path;
+        }
+        
         return $data;
     }
 
@@ -88,12 +93,6 @@ class EditStore extends EditRecord
                 'sorting_order' => $data['sorting_order'] ?? 0,
             ];
 
-            // update
-            $record->update($update);
-
-            // sync store_utility
-            $record->utilities()->sync($data['store_utility']);
-
             // Nếu có update logo path vì để là storage file = false
             if (isset($data['logo_path']) && $data['logo_path'] instanceof TemporaryUploadedFile) {
                 // Xóa ảnh cũ trước
@@ -102,6 +101,11 @@ class EditStore extends EditRecord
                 }
                 $update['logo_path'] = $data['logo_path']->store(StoragePath::makePathById(StoragePath::STORE_PATH, $record->id), 'public');
             }
+
+            // update
+            $record->update($update);
+
+            $record->utilities()->sync($data['store_utility']);
 
             $storeFiles = [];
             $existingFilePaths = [];
@@ -122,8 +126,10 @@ class EditStore extends EditRecord
                             'file_size' => $fileSize,
                             'file_type' => $fileType,
                         ];
-                    }else{
-                        $existingFilePaths[] = $file;
+                    } else {
+                        if (is_string($file) && Storage::disk('public')->exists($file)) {
+                            $existingFilePaths[] = $file;
+                        }
                     }
                 }
 
@@ -143,7 +149,7 @@ class EditStore extends EditRecord
                 if (!empty($storeFiles)) {
                     StoreFile::query()->insert($storeFiles);
                 }
-            }else{
+            } else {
                 // Nếu xóa hết ảnh
                 $filesToDelete = $record->storeFiles()->get();
                 if ($filesToDelete->count() > 0) {
